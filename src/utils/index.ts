@@ -32,3 +32,14 @@ export function track(action: AnyFn, status: Status) {
     }
   }
 }
+
+export function get(obj: Record<string, any>, path: string): any {
+  return path.split('.').reduce((result, key) => result?.[key], obj)
+}
+
+export function set(obj: Record<string, any>, path: string, value: any): void {
+  const keys = path.split('.')
+  const lastKey = keys.pop()!
+  const target = keys.reduce((result, key) => result[key] ??= {}, obj)
+  target[lastKey] = value
+}

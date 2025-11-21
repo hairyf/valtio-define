@@ -10,6 +10,7 @@ shellEmulator: true
 catalog:
   '@hairy/utils': ^1.39.0
   '@types/react': ^19.2.6
+  '@vitejs/plugin-react': ^5.1.1
   react: ^19.2.0
   structure-id: ^1.2.9
   valtio: ^2.2.0

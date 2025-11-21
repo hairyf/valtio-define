@@ -1,10 +1,11 @@
-import type { PersistantOptions } from './types'
+import type { PersistentOptions } from './types'
 import { jsonTryParse } from '@hairy/utils'
 import { generateStructureId } from 'structure-id'
 import { proxy, subscribe } from 'valtio'
+import { get, set } from './utils'
 
-export function proxyWithPersistant<T extends object>(initialObject: T, options: PersistantOptions = {}): T {
-  options.key = options.key ??= generateStructureId(initialObject)
+export function proxyWithPersistent<T extends object>(initialObject: T, options: PersistentOptions = {}): T {
+  options.key = options.key || generateStructureId(initialObject)
 
   const storage = options.storage || (
     typeof localStorage !== 'undefined' ? localStorage : undefined
@@ -14,9 +15,9 @@ export function proxyWithPersistant<T extends object>(initialObject: T, options:
 
   subscribe(state, () => {
     const paths = options.paths || Object.keys(state)
-    const statePaths: any = {}
+    const statePaths: Record<string, unknown> = {}
     for (const key of paths)
-      statePaths[key] = state[key]
+      set(statePaths, key, get(state, key))
     storage?.setItem(
       options.key!,
       JSON.stringify(statePaths),

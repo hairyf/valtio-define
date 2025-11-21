@@ -223,7 +223,7 @@ React hook that returns the status of all actions.
 
 **Returns:** Status object with loading, finished, and error states
 
-### `proxyWithPersistant(initialObject, options?)`
+### `proxyWithPersistent(initialObject, options?)`
 
 Creates a persistent proxy state.
 

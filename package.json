@@ -49,6 +49,7 @@
     "@antfu/utils": "catalog:inlined",
     "@types/node": "catalog:types",
     "@types/react": "catalog:",
+    "@vitejs/plugin-react": "catalog:",
     "bumpp": "catalog:cli",
     "eslint": "catalog:cli",
     "lint-staged": "catalog:cli",

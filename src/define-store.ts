@@ -1,7 +1,7 @@
 import type { Actions, ActionsStatus, Getters, GettersReturnType, Store, StoreDefine, StoreOptions } from './types'
 import { createElement } from 'react'
 import { proxy, subscribe, useSnapshot } from 'valtio'
-import { proxyWithPersistant } from './persistant'
+import { proxyWithPersistent } from './persistent'
 import { track } from './utils'
 
 /**
@@ -33,9 +33,7 @@ import { track } from './utils'
  * ```
  */
 export function defineStore<S extends object, A extends Actions<S>, G extends Getters<S>>(store: StoreDefine<S, A, G>, options: StoreOptions = {}): Store<S, A, G> {
-  const state = typeof store.state === 'function'
-    ? store.state()
-    : store.state
+  const state = typeof store.state === 'function' ? store.state() : store.state
 
   const getters: any = store.getters || {}
   const actions: any = store.actions || {}
@@ -47,7 +45,7 @@ export function defineStore<S extends object, A extends Actions<S>, G extends Ge
 
   const $status = proxy(status)
   const $state = options.persist
-    ? proxyWithPersistant(state, options.persist === true ? {} : options.persist)
+    ? proxyWithPersistent(state, options.persist === true ? {} : options.persist)
     : proxy(state)
 
   const $actions: any = {}
@@ -104,12 +102,12 @@ function setupActions($state: any, actions: any, $actions: any, $status: any): v
 
 function setupGetters(state: any, $state: any, getters: any, $getters: any): void {
   for (const key in getters) {
-    Object.defineProperty(state, key, {
-      get: () => getters[key].call($state),
-      enumerable: true,
-    })
     Object.defineProperty($getters, key, {
       get: () => state[key],
+      enumerable: true,
+    })
+    Object.defineProperty(state, key, {
+      get: () => getters[key].call($state),
       enumerable: true,
     })
   }

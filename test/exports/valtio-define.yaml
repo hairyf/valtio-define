@@ -1,5 +1,5 @@
 .:
   defineStore: function
-  proxyWithPersistant: function
+  proxyWithPersistent: function
   useStatus: function
   useStore: function
