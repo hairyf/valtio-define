@@ -1,7 +1,7 @@
 {
   "name": "valtio-define",
   "type": "module",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "packageManager": "pnpm@10.20.0",
   "description": "⚡quickly create a fully functional and robust Valtio factory",
   "author": "Hairyf <wwu710632@gmail.com>",
