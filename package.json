@@ -1,18 +1,17 @@
 {
-  "name": "pkg-placeholder",
+  "name": "valtio-define",
   "type": "module",
   "version": "0.0.0",
   "packageManager": "pnpm@10.20.0",
-  "description": "_description_",
-  "author": "Anthony Fu <anthonyfu117@hotmail.com>",
+  "description": "⚡quickly create a fully functional and robust Valtio factory",
+  "author": "Hairyf <wwu710632@gmail.com>",
   "license": "MIT",
-  "funding": "https://github.com/sponsors/antfu",
-  "homepage": "https://github.com/antfu/pkg-placeholder#readme",
+  "homepage": "https://github.com/hairyf/valtio-define#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/antfu/pkg-placeholder.git"
+    "url": "git+https://github.com/hairyf/valtio-define.git"
   },
-  "bugs": "https://github.com/antfu/pkg-placeholder/issues",
+  "bugs": "https://github.com/hairyf/valtio-define/issues",
   "keywords": [],
   "sideEffects": false,
   "exports": {
@@ -35,6 +34,9 @@
     "test": "vitest",
     "typecheck": "tsc",
     "prepare": "simple-git-hooks"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0"
   },
   "dependencies": {
     "@hairy/utils": "catalog:",
