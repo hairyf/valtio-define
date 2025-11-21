@@ -16,14 +16,6 @@ To do so, you need to run `pnpm publish` manually for the very first time to cre
 
 Then for the future releases, you can run `pnpm run release` to do the release and the GitHub Actions will take care of the release process.
 
-## Sponsors
-
-<p align="center">
-  <a href="https://cdn.jsdelivr.net/gh/antfu/static/sponsors.svg">
-    <img src='https://cdn.jsdelivr.net/gh/antfu/static/sponsors.svg'/>
-  </a>
-</p>
-
 ## License
 
 [MIT](./LICENSE) License © [Anthony Fu](https://github.com/antfu)

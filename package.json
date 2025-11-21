@@ -38,6 +38,7 @@
   },
   "dependencies": {
     "@hairy/utils": "catalog:",
+    "structure-id": "catalog:",
     "valtio": "catalog:"
   },
   "devDependencies": {

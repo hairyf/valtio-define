@@ -7,6 +7,12 @@ packages:
 ignoreWorkspaceRootCheck: true
 shellEmulator: true
 
+catalog:
+  '@hairy/utils': ^1.39.0
+  '@types/react': ^19.2.6
+  react: ^19.2.0
+  structure-id: ^1.2.9
+  valtio: ^2.2.0
 catalogs:
   cli:
     '@antfu/eslint-config': ^6.2.0
@@ -31,8 +37,3 @@ catalogs:
 onlyBuiltDependencies:
   - esbuild
   - simple-git-hooks
-catalog:
-  '@hairy/utils': ^1.39.0
-  '@types/react': ^19.2.6
-  react: ^19.2.0
-  valtio: ^2.2.0

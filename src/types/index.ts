@@ -23,7 +23,7 @@ export interface StoreDefine<S extends object, A extends Actions<S>, G extends G
 }
 
 export interface StoreOptions {
-  persist?: string | PersistantOptions
+  persist?: boolean | PersistantOptions
 }
 
 export interface StoreSignal<S, A extends Actions<S>, G extends Getters<S>> {
@@ -49,7 +49,7 @@ export type Store<S, A extends Actions<S>, G extends Getters<S>> = {
 } & ActionsOmitThisParameter<A>
 
 export interface PersistantOptions {
-  key: string
+  key?: string
   storage?: Storage
   paths?: string[]
 }
