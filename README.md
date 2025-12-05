@@ -31,11 +31,11 @@ const store = defineStore({
 })
 
 function Counter() {
-  const state = useStore(store)
+  const { count, increment } = useStore(store)
   return (
     <div>
-      <button onClick={store.increment}>Increment</button>
-      <div>{state.count}</div>
+      <button onClick={increment}>Increment</button>
+      <div>{count}</div>
     </div>
   )
 }
@@ -119,19 +119,15 @@ function DataComponent() {
 ### Persistence
 
 ```tsx
-const store = defineStore(
-  {
-    state: () => ({ count: 0 }),
-    actions: {
-      increment() {
-        this.count++
-      },
+const store = defineStore({
+  state: () => ({ count: 0 }),
+  actions: {
+    increment() {
+      this.count++
     },
   },
-  {
-    persist: true // or { key: 'my-store', storage: localStorage, paths: ['count'] }
-  }
-)
+  persist: true // or { key: 'my-store', storage: localStorage, paths: ['count'] }
+})
 ```
 
 If the persist is a boolean value, it will use `structure-id` to generate a unique key for the store.
@@ -193,7 +189,7 @@ function App() {
 
 ## API
 
-### `defineStore(store, options?)`
+### `defineStore(store)`
 
 Creates a store with state, actions, and getters.
 
@@ -201,7 +197,7 @@ Creates a store with state, actions, and getters.
 - `store.state`: Initial state object or factory function
 - `store.actions`: Object containing action methods
 - `store.getters`: Object containing getter methods
-- `options.persist`: Persistence configuration (boolean or object)
+- `store.persist`: Persistence configuration (boolean or object)
 
 **Returns:** Store instance with reactive state and actions
 
