@@ -11,7 +11,10 @@ export function track(action: AnyFn, status: Status) {
   }
   const fulfilled = (value: any): any => {
     status.finished = true
+    if (status.error)
+      delete status.error
     done()
+
     return value
   }
   const rejected = (error: any): never => {

@@ -32,7 +32,7 @@ import { track } from './utils'
  *
  * ```
  */
-export function defineStore<S extends object, A extends Actions<S>, G extends Getters<S>>(store: StoreDefine<S, A, G>, options: StoreOptions = {}): Store<S, A, G> {
+export function defineStore<S extends object, A extends Actions<S>, G extends Getters<S>>(store: StoreDefine<S, A, G> & StoreOptions): Store<S, A, G> {
   const state = typeof store.state === 'function' ? store.state() : store.state
 
   const getters: any = store.getters || {}
@@ -41,11 +41,11 @@ export function defineStore<S extends object, A extends Actions<S>, G extends Ge
 
   status.finished = false
   status.loading = false
-  status.error = null
+  status.error = undefined
 
   const $status = proxy(status)
-  const $state = options.persist
-    ? proxyWithPersistent(state, options.persist === true ? {} : options.persist)
+  const $state = store.persist
+    ? proxyWithPersistent(state, store.persist === true ? {} : store.persist)
     : proxy(state)
 
   const $actions: any = {}
@@ -92,7 +92,7 @@ export function defineStore<S extends object, A extends Actions<S>, G extends Ge
 
 function setupActions($state: any, actions: any, $actions: any, $status: any): void {
   for (const key in actions) {
-    $status[key] = { finished: false, loading: false, error: null }
+    $status[key] = { finished: false, loading: false, error: undefined }
     $actions[key] = track(actions[key].bind($state), $status[key])
     Object.defineProperty($state, key, {
       get: () => ref($actions[key]),
@@ -124,7 +124,10 @@ function setupStatus($actions: any, $status: any): void {
     enumerable: true,
   })
   Object.defineProperty($status, 'error', {
-    get: () => Object.keys($actions).find(key => $status[key].error),
+    get: () => {
+      const key = Object.keys($actions).find(key => $status[key].error)
+      return $status[key || '']?.error
+    },
     enumerable: true,
   })
 }

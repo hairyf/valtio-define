@@ -18,6 +18,7 @@ export function proxyWithPersistent<T extends object>(initialObject: T, options:
     const statePaths: Record<string, unknown> = {}
     for (const key of paths)
       set(statePaths, key, get(state, key))
+
     storage?.setItem(
       options.key!,
       JSON.stringify(statePaths),
