@@ -14,13 +14,22 @@
   "bugs": "https://github.com/hairyf/valtio-define/issues",
   "keywords": [],
   "sideEffects": false,
+  "publishConfig": {
+    "exports": {
+      ".": "./dist/index.mjs",
+      "./package.json": "./package.json"
+    },
+    "main": "./dist/index.mjs",
+    "module": "./dist/index.mjs",
+    "types": "./dist/index.d.mts",
+    "access": "public"
+  },
   "exports": {
-    ".": "./dist/index.mjs",
+    ".": "./src/index.ts",
     "./package.json": "./package.json"
   },
-  "main": "./dist/index.mjs",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.mts",
+  "main": "./src/index.ts",
+  "module": "./src/index.ts",
   "files": [
     "dist"
   ],
@@ -48,7 +57,7 @@
     "@antfu/ni": "catalog:cli",
     "@antfu/utils": "catalog:inlined",
     "@types/node": "catalog:types",
-    "@types/react": "catalog:",
+    "@types/react": "catalog:types",
     "@vitejs/plugin-react": "catalog:",
     "bumpp": "catalog:cli",
     "eslint": "catalog:cli",

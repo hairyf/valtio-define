@@ -1,6 +1,6 @@
 import type { Actions, ActionsStatus, Getters, GettersReturnType, Store, StoreDefine, StoreOptions } from './types'
 import { createElement } from 'react'
-import { proxy, subscribe, useSnapshot } from 'valtio'
+import { proxy, ref, subscribe, useSnapshot } from 'valtio'
 import { proxyWithPersistent } from './persistent'
 import { track } from './utils'
 
@@ -95,7 +95,8 @@ function setupActions($state: any, actions: any, $actions: any, $status: any): v
     $status[key] = { finished: false, loading: false, error: null }
     $actions[key] = track(actions[key].bind($state), $status[key])
     Object.defineProperty($state, key, {
-      get: () => $actions[key],
+      get: () => ref($actions[key]),
+      enumerable: false,
     })
   }
 }
