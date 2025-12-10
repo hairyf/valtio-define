@@ -64,6 +64,7 @@
     "bumpp": "catalog:cli",
     "eslint": "catalog:cli",
     "lint-staged": "catalog:cli",
+    "playwright": "catalog:testing",
     "react": "catalog:",
     "simple-git-hooks": "catalog:cli",
     "tinyexec": "catalog:testing",

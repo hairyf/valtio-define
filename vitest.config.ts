@@ -6,17 +6,33 @@ export default defineConfig({
   plugins: [react()],
   test: {
     globals: true,
-    browser: {
-      enabled: true,
-      provider: playwright(),
-      instances: [
-        { browser: 'chromium' },
-      ],
-    },
-    server: {
-      deps: {
-        inline: ['vitest-package-exports'],
+    projects: [
+      {
+        test: {
+          environment: 'node',
+          include: [
+            '!test/**/*.browser.test.{ts,tsx,js,jsx}',
+            'test/*.test.{ts,js}',
+          ],
+          server: {
+            deps: {
+              inline: ['vitest-package-exports'],
+            },
+          },
+        },
       },
-    },
+      {
+        test: {
+          include: ['test/**/*.browser.test.{ts,tsx,js,jsx}'],
+          browser: {
+            enabled: true,
+            provider: playwright(),
+            instances: [
+              { browser: 'chromium' },
+            ],
+          },
+        },
+      },
+    ],
   },
 })

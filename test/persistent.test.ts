@@ -1,46 +1,51 @@
+import { delay } from '@hairy/utils'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { proxyWithPersistent } from '../src/persistent'
 
+function createMockStorage() {
+  return {
+    getItem: vi.fn(),
+    setItem: vi.fn(),
+    removeItem: vi.fn(),
+    clear: vi.fn(),
+    length: 0,
+    key: vi.fn(),
+  }
+}
+
 describe('proxyWithPersistent', () => {
-  let mockStorage: Storage
+  let storage: ReturnType<typeof createMockStorage>
 
   beforeEach(() => {
-    mockStorage = {
-      getItem: vi.fn(),
-      setItem: vi.fn(),
-      removeItem: vi.fn(),
-      clear: vi.fn(),
-      length: 0,
-      key: vi.fn(),
-    }
+    storage = createMockStorage()
     vi.clearAllMocks()
   })
 
   it('should create persistent proxy', () => {
-    const state = proxyWithPersistent({ count: 0 }, { storage: mockStorage })
+    const state = proxyWithPersistent({ count: 0 }, { storage })
 
     expect(state.count).toBe(0)
   })
 
   it('should load state from storage', () => {
     const storedData = { count: 42 }
-    mockStorage.getItem = vi.fn().mockReturnValue(JSON.stringify(storedData))
+    storage.getItem = vi.fn().mockReturnValue(JSON.stringify(storedData))
 
     const state = proxyWithPersistent({ count: 0 }, {
       key: 'test-key',
-      storage: mockStorage,
+      storage,
     })
 
-    expect(mockStorage.getItem).toHaveBeenCalledWith('test-key')
+    expect(storage.getItem).toHaveBeenCalledWith('test-key')
     expect(state.count).toBe(42)
   })
 
   it('should use initial state if storage is empty', () => {
-    mockStorage.getItem = vi.fn().mockReturnValue(null)
+    storage.getItem = vi.fn().mockReturnValue(null)
 
     const state = proxyWithPersistent({ count: 0, name: 'test' }, {
       key: 'test-key',
-      storage: mockStorage,
+      storage,
     })
 
     expect(state.count).toBe(0)
@@ -49,28 +54,31 @@ describe('proxyWithPersistent', () => {
 
   it('should save state to storage on changes', async () => {
     const state = proxyWithPersistent({ count: 0 }, {
+      storage,
       key: 'test-key',
-      storage: mockStorage,
     })
 
     state.count = 10
 
-    await new Promise(resolve => setTimeout(resolve, 10))
+    await delay(0)
 
-    expect(mockStorage.setItem).toHaveBeenCalled()
-    const callArgs = (mockStorage.setItem as any).mock.calls[0]
+    expect(storage.setItem).toHaveBeenCalled()
+    const callArgs = storage.setItem.mock.calls[0]
     expect(callArgs[0]).toBe('test-key')
     const savedData = JSON.parse(callArgs[1])
     expect(savedData.count).toBe(10)
   })
 
-  it.skip('should auto-generate key if not provided', () => {
-    const state = proxyWithPersistent({ count: 0 }, { storage: mockStorage })
+  it('should auto-generate key if not provided', async () => {
+    const state = proxyWithPersistent({ count: 0 }, { storage })
 
     state.count = 10
 
-    expect(mockStorage.setItem).toHaveBeenCalled()
-    const callArgs = (mockStorage.setItem as any).mock.calls[0]
+    await delay(0)
+
+    expect(storage.setItem).toHaveBeenCalled()
+
+    const callArgs = storage.setItem.mock.calls[0]
     expect(callArgs[0]).toBeDefined()
     expect(typeof callArgs[0]).toBe('string')
   })
@@ -80,7 +88,7 @@ describe('proxyWithPersistent', () => {
       { count: 0, name: 'test', age: 20 },
       {
         key: 'test-key',
-        storage: mockStorage,
+        storage,
         paths: ['count', 'age'],
       },
     )
@@ -89,10 +97,10 @@ describe('proxyWithPersistent', () => {
     state.name = 'updated'
     state.age = 25
 
-    await new Promise(resolve => setTimeout(resolve, 10))
+    await delay(0)
 
-    expect(mockStorage.setItem).toHaveBeenCalled()
-    const callArgs = (mockStorage.setItem as any).mock.calls[0]
+    expect(storage.setItem).toHaveBeenCalled()
+    const callArgs = storage.setItem.mock.calls[0]
     const savedData = JSON.parse(callArgs[1])
     expect(savedData.count).toBe(10)
     expect(savedData.age).toBe(25)
@@ -104,17 +112,17 @@ describe('proxyWithPersistent', () => {
       { count: 0, name: 'test' },
       {
         key: 'test-key',
-        storage: mockStorage,
+        storage,
       },
     )
 
     state.count = 10
     state.name = 'updated'
 
-    await new Promise(resolve => setTimeout(resolve, 10))
+    await delay(0)
 
-    expect(mockStorage.setItem).toHaveBeenCalled()
-    const callArgs = (mockStorage.setItem as any).mock.calls[0]
+    expect(storage.setItem).toHaveBeenCalled()
+    const callArgs = storage.setItem.mock.calls[0]
     const savedData = JSON.parse(callArgs[1])
     expect(savedData.count).toBe(10)
     expect(savedData.name).toBe('updated')
@@ -125,17 +133,17 @@ describe('proxyWithPersistent', () => {
       { user: { name: 'test', age: 20 } },
       {
         key: 'test-key',
-        storage: mockStorage,
+        storage,
       },
     )
 
     state.user.name = 'updated'
     state.user.age = 25
 
-    await new Promise(resolve => setTimeout(resolve, 10))
+    await delay(0)
 
-    expect(mockStorage.setItem).toHaveBeenCalled()
-    const callArgs = (mockStorage.setItem as any).mock.calls[0]
+    expect(storage.setItem).toHaveBeenCalled()
+    const callArgs = storage.setItem.mock.calls[0]
     const savedData = JSON.parse(callArgs[1])
     expect(savedData.user.name).toBe('updated')
     expect(savedData.user.age).toBe(25)
@@ -168,11 +176,11 @@ describe('proxyWithPersistent', () => {
   })
 
   it('should handle invalid JSON in storage gracefully', () => {
-    mockStorage.getItem = vi.fn().mockReturnValue('invalid json{')
+    storage.getItem = vi.fn().mockReturnValue('invalid json{')
 
     const state = proxyWithPersistent({ count: 0 }, {
       key: 'test-key',
-      storage: mockStorage,
+      storage,
     })
 
     // Should fall back to initial state
@@ -182,20 +190,20 @@ describe('proxyWithPersistent', () => {
   it('should persist multiple changes', async () => {
     const state = proxyWithPersistent({ count: 0 }, {
       key: 'test-key',
-      storage: mockStorage,
+      storage,
     })
 
     state.count = 1
-    await new Promise(resolve => setTimeout(resolve, 10))
+    await delay(0)
 
     state.count = 2
-    await new Promise(resolve => setTimeout(resolve, 10))
+    await delay(0)
 
     state.count = 3
-    await new Promise(resolve => setTimeout(resolve, 10))
+    await delay(0)
 
-    expect(mockStorage.setItem).toHaveBeenCalledTimes(3)
-    const lastCall = (mockStorage.setItem as any).mock.calls[2]
+    expect(storage.setItem).toHaveBeenCalledTimes(3)
+    const lastCall = storage.setItem.mock.calls[2]
     const savedData = JSON.parse(lastCall[1])
     expect(savedData.count).toBe(3)
   })
@@ -203,15 +211,15 @@ describe('proxyWithPersistent', () => {
   it('should work with arrays', async () => {
     const state = proxyWithPersistent({ items: [1, 2, 3] }, {
       key: 'test-key',
-      storage: mockStorage,
+      storage,
     })
 
     state.items.push(4)
 
-    await new Promise(resolve => setTimeout(resolve, 10))
+    await delay(0)
 
-    expect(mockStorage.setItem).toHaveBeenCalled()
-    const callArgs = (mockStorage.setItem as any).mock.calls[0]
+    expect(storage.setItem).toHaveBeenCalled()
+    const callArgs = storage.setItem.mock.calls[0]
     const savedData = JSON.parse(callArgs[1])
     expect(savedData.items).toEqual([1, 2, 3, 4])
   })

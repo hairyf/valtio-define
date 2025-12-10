@@ -1,11 +1,13 @@
+catalogMode: prefer
+ignoreWorkspaceRootCheck: true
+shellEmulator: true
+trustPolicy: no-downgrade
+
 packages:
   - playground
   - docs
   - packages/*
   - examples/*
-
-ignoreWorkspaceRootCheck: true
-shellEmulator: true
 
 catalog:
   '@hairy/utils': ^1.39.0
@@ -32,9 +34,10 @@ catalogs:
     '@antfu/utils': ^9.3.0
   testing:
     '@vitest/browser-playwright': ^4.0.15
-    '@vitest/coverage-v8': ^4.0.7
+    '@vitest/coverage-v8': ^4.0.15
+    playwright: ^1.57.0
     tinyexec: ^1.0.2
-    vitest: ^4.0.7
+    vitest: ^4.0.15
     vitest-package-exports: ^0.1.1
     yaml: ^2.8.1
   types:
