@@ -9,6 +9,7 @@ export default defineConfig({
     projects: [
       {
         test: {
+          name: 'node',
           environment: 'node',
           include: [
             '!test/**/*.browser.test.{ts,tsx,js,jsx}',
@@ -23,8 +24,10 @@ export default defineConfig({
       },
       {
         test: {
+          name: 'browser',
           include: ['test/**/*.browser.test.{ts,tsx,js,jsx}'],
           browser: {
+            headless: true,
             enabled: true,
             provider: playwright(),
             instances: [
