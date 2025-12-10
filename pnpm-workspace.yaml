@@ -38,6 +38,7 @@ catalogs:
     playwright: ^1.57.0
     tinyexec: ^1.0.2
     vitest: ^4.0.15
+    vitest-browser-react: ^2.0.2
     vitest-package-exports: ^0.1.1
     yaml: ^2.8.1
   types:

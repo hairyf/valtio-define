@@ -81,6 +81,9 @@ catalogs:
     vitest:
       specifier: ^4.0.15
       version: 4.0.15
+    vitest-browser-react:
+      specifier: ^2.0.2
+      version: 2.0.2
     vitest-package-exports:
       specifier: ^0.1.1
       version: 0.1.1
@@ -172,6 +175,9 @@ importers:
       vitest:
         specifier: catalog:testing
         version: 4.0.15(@types/node@24.10.2)(@vitest/browser-playwright@4.0.15)(jiti@2.6.1)(tsx@4.21.0)(yaml@2.8.2)
+      vitest-browser-react:
+        specifier: catalog:testing
+        version: 2.0.2(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vitest@4.0.15)
       vitest-package-exports:
         specifier: catalog:testing
         version: 0.1.1
@@ -2795,6 +2801,20 @@ packages:
       tsx:
         optional: true
       yaml:
+        optional: true
+
+  vitest-browser-react@2.0.2:
+    resolution: {integrity: sha512-zuSgTe/CKODU3ip+w4ls6Qm4xZ9+A4OHmDf0obt/mwAqavpOtqtq2YcioZt8nfDQE50EWmhdnRfDmpS1jCsbTQ==}
+    peerDependencies:
+      '@types/react': ^18.0.0 || ^19.0.0
+      '@types/react-dom': ^18.0.0 || ^19.0.0
+      react: ^18.0.0 || ^19.0.0
+      react-dom: ^18.0.0 || ^19.0.0
+      vitest: ^4.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      '@types/react-dom':
         optional: true
 
   vitest-package-exports@0.1.1:
@@ -5551,6 +5571,15 @@ snapshots:
       jiti: 2.6.1
       tsx: 4.21.0
       yaml: 2.8.2
+
+  vitest-browser-react@2.0.2(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vitest@4.0.15):
+    dependencies:
+      react: 19.2.1
+      react-dom: 19.2.1(react@19.2.1)
+      vitest: 4.0.15(@types/node@24.10.2)(@vitest/browser-playwright@4.0.15)(jiti@2.6.1)(tsx@4.21.0)(yaml@2.8.2)
+    optionalDependencies:
+      '@types/react': 19.2.7
+      '@types/react-dom': 19.2.3(@types/react@19.2.7)
 
   vitest-package-exports@0.1.1:
     dependencies:

@@ -73,6 +73,7 @@
     "typescript": "catalog:cli",
     "vite": "catalog:cli",
     "vitest": "catalog:testing",
+    "vitest-browser-react": "catalog:testing",
     "vitest-package-exports": "catalog:testing",
     "yaml": "catalog:testing"
   },

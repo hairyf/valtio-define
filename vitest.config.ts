@@ -27,7 +27,6 @@ export default defineConfig({
           name: 'browser',
           include: ['test/**/*.browser.test.{ts,tsx,js,jsx}'],
           browser: {
-            headless: true,
             enabled: true,
             provider: playwright(),
             instances: [
