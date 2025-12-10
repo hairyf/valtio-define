@@ -1,3 +1,4 @@
+import { delay } from '@hairy/utils'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { defineStore } from '../src/define-store'
 
@@ -405,7 +406,7 @@ describe('defineStore', () => {
   })
 
   describe('$subscribe', () => {
-    it.skip('should subscribe to state changes', () => {
+    it('should subscribe to state changes', async () => {
       const store = defineStore({
         state: { count: 0 },
       })
@@ -414,13 +415,16 @@ describe('defineStore', () => {
       const unsubscribe = store.$subscribe(listener)
 
       store.$state.count = 1
+      await delay(0)
       expect(listener).toHaveBeenCalledTimes(1)
 
       store.$state.count = 2
+      await delay(0)
       expect(listener).toHaveBeenCalledTimes(2)
 
       unsubscribe()
       store.$state.count = 3
+      await delay(0)
       expect(listener).toHaveBeenCalledTimes(2)
     })
 
@@ -453,13 +457,13 @@ describe('defineStore', () => {
   })
 
   describe('$patch', () => {
-    it.skip('should patch state with object', () => {
+    it('should patch state with object', async () => {
       const store = defineStore({
         state: { count: 0, name: 'test' },
       })
 
       store.$patch({ count: 10, name: 'updated' })
-
+      await delay(0)
       expect(store.$state.count).toBe(10)
       expect(store.$state.name).toBe('updated')
     })
@@ -478,7 +482,7 @@ describe('defineStore', () => {
       expect(store.$state.name).toBe('patched')
     })
 
-    it.skip('should trigger subscription on patch', () => {
+    it('should trigger subscription on patch', async () => {
       const store = defineStore({
         state: { count: 0 },
       })
@@ -487,11 +491,14 @@ describe('defineStore', () => {
       store.$subscribe(listener)
 
       store.$patch({ count: 10 })
+
+      await delay(0)
       expect(listener).toHaveBeenCalledTimes(1)
 
       store.$patch((state) => {
         state.count = 20
       })
+      await delay(0)
       expect(listener).toHaveBeenCalledTimes(2)
     })
   })

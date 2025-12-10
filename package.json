@@ -59,6 +59,8 @@
     "@types/node": "catalog:types",
     "@types/react": "catalog:types",
     "@vitejs/plugin-react": "catalog:",
+    "@vitest/browser-playwright": "catalog:testing",
+    "@vitest/coverage-v8": "catalog:testing",
     "bumpp": "catalog:cli",
     "eslint": "catalog:cli",
     "lint-staged": "catalog:cli",
