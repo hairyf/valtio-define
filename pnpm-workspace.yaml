@@ -10,7 +10,7 @@ packages:
   - examples/*
 
 catalog:
-  '@hairy/utils': ^1.39.0
+  '@hairy/utils': ^1.46.0
   '@vitejs/plugin-react': ^5.1.1
   react: ^19.2.0
   react-dom: ^19.2.0

@@ -44,7 +44,7 @@ catalogs:
       version: 7.2.7
   default:
     '@hairy/utils':
-      specifier: ^1.39.0
+      specifier: ^1.46.0
       version: 1.46.0
     '@vitejs/plugin-react':
       specifier: ^5.1.1
