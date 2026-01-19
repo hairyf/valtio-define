@@ -52,7 +52,7 @@ export function defineStore<S extends object, A extends Actions<S>, G extends Ge
   const $getters: any = {}
 
   setupActions($state, actions, $actions, $status)
-  setupGetters(state, $state, getters, $getters)
+  setupGetters($state, getters, $getters)
   setupStatus($actions, $status)
 
   function $subscribe(listener: (state: S & GettersReturnType<G>) => void): () => void {
@@ -101,13 +101,13 @@ function setupActions($state: any, actions: any, $actions: any, $status: any): v
   }
 }
 
-function setupGetters(state: any, $state: any, getters: any, $getters: any): void {
+function setupGetters($state: any, getters: any, $getters: any): void {
   for (const key in getters) {
     Object.defineProperty($getters, key, {
-      get: () => state[key],
+      get: () => $state[key],
       enumerable: true,
     })
-    Object.defineProperty(state, key, {
+    Object.defineProperty($state, key, {
       get: () => getters[key].call($state),
       enumerable: true,
     })

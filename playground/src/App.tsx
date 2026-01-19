@@ -20,6 +20,10 @@ const store = defineStore({
       return this.count * 2
     },
   },
+  persist: {
+    key: 'counter',
+    paths: ['count'],
+  },
 })
 
 function App() {
