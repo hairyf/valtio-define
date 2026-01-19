@@ -1,3 +1,4 @@
+/* eslint-disable ts/ban-ts-comment */
 import type { Actions, ActionsStatus, Getters, GettersReturnType, Store, StoreDefine, StoreOptions } from './types'
 import { createElement } from 'react'
 import { proxy, ref, subscribe, useSnapshot } from 'valtio'
@@ -33,7 +34,7 @@ import { track } from './utils'
  *
  * ```
  */
-export function defineStore<S extends object, A extends Actions<S>, G extends Getters<S>>(store: StoreDefine<S, A, G> & StoreOptions): Store<S, A, G> {
+export function defineStore<S extends object, A extends Actions<S>, G extends Getters<S>>(store: StoreDefine<S, A, G> & StoreOptions<S>): Store<S, A, G> {
   const state = typeof store.state === 'function' ? store.state() : store.state
 
   const getters: any = store.getters || {}
@@ -46,6 +47,7 @@ export function defineStore<S extends object, A extends Actions<S>, G extends Ge
 
   const $status = proxy(status)
   const $state = store.persist
+    // @ts-expect-error
     ? proxyWithPersistent(state, store.persist === true ? {} : store.persist)
     : proxy(state)
 

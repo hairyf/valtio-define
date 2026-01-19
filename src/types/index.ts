@@ -22,8 +22,8 @@ export interface StoreDefine<S extends object, A extends Actions<S>, G extends G
   getters?: G
 }
 
-export interface StoreOptions {
-  persist?: boolean | PersistentOptions
+export interface StoreOptions<S extends object = Record<string, unknown>> {
+  persist?: boolean | PersistentOptions<S>
 }
 
 export interface StoreSignal<S, A extends Actions<S>, G extends Getters<S>> {
@@ -49,8 +49,9 @@ export type Store<S, A extends Actions<S>, G extends Getters<S>> = {
   $signal: StoreSignal<S, A, G>
 } & ActionsOmitThisParameter<A>
 
-export interface PersistentOptions {
+export interface PersistentOptions<S extends object = Record<string, unknown>> {
   key?: string
-  storage?: Storage
-  paths?: string[]
+  storage?: Partial<Storage> & Pick<Storage, 'getItem' | 'setItem'>
+  paths?: (keyof S)[]
+  initial?: (initialState: S) => any | Promise<any>
 }
