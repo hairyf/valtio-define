@@ -11,7 +11,8 @@ export function proxyWithPersistent<T extends object>(initialObject: T, options:
     typeof localStorage !== 'undefined' ? localStorage : undefined
   )
 
-  const state = proxy(tryParseJson(storage?.getItem(options.key)) || initialObject)
+  Object.assign(initialObject, tryParseJson(storage?.getItem(options.key)))
+  const state = proxy(initialObject)
 
   subscribe(state, () => {
     const paths = options.paths || Object.keys(state)
