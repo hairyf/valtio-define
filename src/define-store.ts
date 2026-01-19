@@ -1,6 +1,7 @@
 import type { Actions, ActionsStatus, Getters, GettersReturnType, Store, StoreDefine, StoreOptions } from './types'
 import { createElement } from 'react'
 import { proxy, ref, subscribe, useSnapshot } from 'valtio'
+import { subscribeKey } from 'valtio/utils'
 import { proxyWithPersistent } from './persistent'
 import { track } from './utils'
 
@@ -61,6 +62,10 @@ export function defineStore<S extends object, A extends Actions<S>, G extends Ge
 
   $subscribe.status = function (listener: (status: ActionsStatus<A>) => void) {
     return subscribe($status, () => listener($status as any))
+  }
+
+  $subscribe.key = function (key: keyof S, listener: (state: S & GettersReturnType<G>) => void): () => void {
+    return subscribeKey($state, key, () => listener($state as any))
   }
 
   function $patch(patch: Partial<S> | ((state: S) => void)): void {

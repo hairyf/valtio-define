@@ -33,6 +33,7 @@ export interface StoreSignal<S, A extends Actions<S>, G extends Getters<S>> {
 export interface StoreSubscribe<S, A extends Actions<S>, G extends Getters<S>> {
   (listener: (state: S & GettersReturnType<G>) => void): () => void
   status: (listener: (status: ActionsStatus<A>) => void) => () => void
+  key: <K extends keyof S | keyof G>(key: K, listener: (state: (S & GettersReturnType<G>)[K]) => void) => () => void
 }
 export interface StorePatch<S, G extends Getters<S>> {
   (patch: Partial<S> | ((state: S & GettersReturnType<G>) => void)): void
