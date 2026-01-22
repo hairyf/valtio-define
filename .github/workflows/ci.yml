@@ -49,5 +49,7 @@ jobs:
 
       - run: pnpm i -g @antfu/ni
       - run: nci
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
       - run: nr build
       - run: nr test
