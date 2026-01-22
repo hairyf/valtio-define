@@ -14,19 +14,6 @@
   "bugs": "https://github.com/hairyf/valtio-define/issues",
   "keywords": [],
   "sideEffects": false,
-  "publishConfig": {
-    "exports": {
-      ".": "./dist/index.mjs",
-      "./package.json": "./package.json"
-    },
-    "./plugins": "./dist/plugins/index.mjs",
-    "./plugins/persistent": "./dist/plugins/persistent/index.mjs",
-    "./types": "./dist/types/index.mjs",
-    "main": "./dist/index.mjs",
-    "module": "./dist/index.mjs",
-    "types": "./dist/index.d.mts",
-    "access": "public"
-  },
   "exports": {
     ".": "./src/index.ts",
     "./package.json": "./package.json",

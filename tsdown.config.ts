@@ -1,12 +1,9 @@
 import { defineConfig } from 'tsdown'
 
 export default defineConfig({
-  entry: [
-    'src/index.ts',
-    'src/types/index.ts',
-    'src/plugins/index.ts',
-    'src/plugins/persistent/index.ts',
-  ],
+  entry: ['src/**/*.ts'],
+  minify: true,
+  clean: true,
   dts: true,
   exports: true,
 })
