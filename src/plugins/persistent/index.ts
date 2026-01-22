@@ -5,7 +5,7 @@ import { destr } from 'destr'
 import { generateStructureId } from 'structure-id'
 import { subscribe } from 'valtio'
 
-export function persistent(): Plugin {
+function persistent(): Plugin {
   return (context) => {
     if (!context.options.persist)
       return
@@ -66,3 +66,5 @@ declare module 'valtio-define/types' {
     persist?: PersistentOptions<S> | boolean
   }
 }
+
+export default persistent
