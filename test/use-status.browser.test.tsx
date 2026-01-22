@@ -2,7 +2,7 @@ import { delay } from '@hairy/utils'
 import { describe, expect, it } from 'vitest'
 import { render } from 'vitest-browser-react'
 import { defineStore, useStatus } from '../src'
-import { TestUseStatus } from './components/TestUseStatus'
+import { TestUseStatus } from './components/test-use-status'
 
 describe('useStatus', () => {
   it('should be a function', () => {
