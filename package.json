@@ -41,6 +41,7 @@
     "release": "bumpp",
     "start": "tsx src/index.ts",
     "test": "vitest",
+    "coverage": "vitest run --coverage",
     "typecheck": "tsc",
     "prepare": "simple-git-hooks"
   },

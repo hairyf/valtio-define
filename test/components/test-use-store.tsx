@@ -1,4 +1,3 @@
-import React from 'react'
 import { defineStore, useStore } from '../../src'
 
 const store = defineStore({
