@@ -7,17 +7,19 @@
 [![coverage][coverage-src]][coverage-href]
 [![License][license-src]][license-href]
 
-⚡ Quickly create a fully functional and robust Valtio factory
+⚡ Quickly create a fully functional and robust [Valtio](https://valtio.dev) factory
 
 ## Installation
 
 ```bash
-npm install valtio-define
+pnpm add valtio-define
 ```
 
 ## Usage
 
 ### Basic Store
+
+Create a reactive store with state and actions. The store provides a simple and intuitive API for managing state in React applications, built on top of Valtio.
 
 ```tsx
 import { defineStore, useStore } from 'valtio-define'
@@ -43,6 +45,8 @@ function Counter() {
 ```
 
 ### With Getters
+
+Getters are computed properties that automatically update when their dependencies change. They provide a clean way to derive state without manually tracking dependencies.
 
 ```tsx
 const store = defineStore({
@@ -169,6 +173,87 @@ function App() {
 }
 ```
 
+### Store to State Hooks
+
+Convert store state to React hooks similar to `useState`. This provides a more React-idiomatic way to access and update store state.
+
+#### `storeToState(store, key)`
+
+Returns a tuple `[state, setter]` for a single store key, similar to React's `useState`.
+
+```tsx
+import { defineStore, storeToState } from 'valtio-define'
+
+const store = defineStore({
+  state: { count: 0, name: 'test' },
+})
+
+function Counter() {
+  const [count, setCount] = storeToState(store, 'count')
+  const [name, setName] = storeToState(store, 'name')
+
+  return (
+    <div>
+      <button onClick={() => setCount(count + 1)}>Increment</button>
+      <button onClick={() => setCount(prev => prev + 1)}>Increment (functional)</button>
+      <div>
+        Count:
+        {count}
+      </div>
+      <div>
+        Name:
+        {name}
+      </div>
+    </div>
+  )
+}
+```
+
+**Parameters:**
+- `store`: Store instance created by `defineStore`
+- `key`: Key of the state property to access
+
+**Returns:** `[state, setter]` tuple where:
+- `state`: Current value of the state property
+- `setter`: Function to update the state (accepts value or updater function)
+
+#### `storeToStates(store)`
+
+Returns an object with all store keys mapped to `[state, setter]` tuples.
+
+```tsx
+function Component() {
+  const {
+    count: [count, setCount],
+    name: [name, setName],
+    user: [user, setUser],
+  } = storeToStates(store)
+
+  return (
+    <div>
+      <button onClick={() => setCount(count + 1)}>Increment</button>
+      <div>
+        Count:
+        {count}
+      </div>
+      <div>
+        Name:
+        {name}
+      </div>
+      <div>
+        User:
+        {user.name}
+      </div>
+    </div>
+  )
+}
+```
+
+**Parameters:**
+- `store`: Store instance created by `defineStore`
+
+**Returns:** Object where each key maps to a `[state, setter]` tuple
+
 ## API
 
 ### `defineStore(store)`
@@ -179,7 +264,7 @@ Creates a store with state, actions, and getters.
 - `store.state`: Initial state object or factory function
 - `store.actions`: Object containing action methods
 - `store.getters`: Object containing getter methods
-- `store.persist`: Persistence plugin configuration (boolean or object) - see [Persistence Plugin](#persistence-plugin)
+- `store.persist`: Persistence plugin configuration (boolean or object) - see [Persistence Plugin](#persistence)
 
 **Returns:** Store instance with reactive state and actions
 
@@ -192,6 +277,27 @@ React hook that returns a snapshot of the store state.
 
 **Returns:** Snapshot of the store state
 
+### `storeToState(store, key)`
+
+React hook that returns a `[state, setter]` tuple for a single store key, similar to React's `useState`.
+
+**Parameters:**
+- `store`: Store instance created by `defineStore`
+- `key`: Key of the state property to access
+
+**Returns:** `[state, setter]` tuple where:
+- `state`: Current value of the state property
+- `setter`: Function to update the state (accepts value or updater function like `setState(value)` or `setState(prev => newValue)`)
+
+### `storeToStates(store)`
+
+React hook that returns an object with all store keys mapped to `[state, setter]` tuples.
+
+**Parameters:**
+- `store`: Store instance created by `defineStore`
+
+**Returns:** Object where each key maps to a `[state, setter]` tuple, preserving the correct type for each property
+
 ### Plugins
 
 Plugins allow you to extend store functionality. You can use plugins globally or per-store.
@@ -199,11 +305,11 @@ Plugins allow you to extend store functionality. You can use plugins globally or
 #### Global Plugin Registration
 
 ```tsx
-import { use } from 'valtio-define'
+import valtio from 'valtio-define'
 import { persistent } from 'valtio-define/plugins'
 
 // Register plugin globally - applies to all stores
-use(persistent())
+valtio.use(persistent())
 ```
 
 #### Per-Store Plugin Registration
