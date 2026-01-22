@@ -7,7 +7,9 @@ import { subscribe } from 'valtio'
 
 export function persistent(): Plugin {
   return (context) => {
-    const options = context.options.persist || {}
+    if (!context.options.persist)
+      return
+    const options = context.options.persist
     options.key = options.key || generateStructureId(context.store.$state)
     const storage = options.storage || (typeof localStorage !== 'undefined' ? localStorage : undefined)
     const value = storage?.getItem(options.key)
