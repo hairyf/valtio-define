@@ -1,7 +1,7 @@
 {
   "name": "valtio-define",
   "type": "module",
-  "version": "1.0.3",
+  "version": "1.0.1",
   "packageManager": "pnpm@10.20.0",
   "description": "⚡quickly create a fully functional and robust Valtio factory",
   "author": "Hairyf <wwu710632@gmail.com>",
@@ -14,6 +14,24 @@
   "bugs": "https://github.com/hairyf/valtio-define/issues",
   "keywords": [],
   "sideEffects": false,
+  "publishConfig": {
+    "exports": {
+      ".": "./dist/index.mjs",
+      "./define": "./dist/define.mjs",
+      "./plugin": "./dist/plugin.mjs",
+      "./plugins": "./dist/plugins/index.mjs",
+      "./plugins/persistent": "./dist/plugins/persistent/index.mjs",
+      "./types": "./dist/types/index.mjs",
+      "./use": "./dist/use.mjs",
+      "./utils": "./dist/utils.mjs",
+      "./package.json": "./package.json"
+    },
+    "./types": "./dist/types/index.mjs",
+    "main": "./dist/index.mjs",
+    "module": "./dist/index.mjs",
+    "types": "./dist/index.d.mts",
+    "access": "public"
+  },
   "exports": {
     ".": "./src/index.ts",
     "./package.json": "./package.json",
