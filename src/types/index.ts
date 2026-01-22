@@ -1,5 +1,6 @@
-export type Actions<S> = Record<string, (this: S, ...args: any) => any>
-export type Getters<S> = Record<string, (this: S) => any>
+export type Actions<S = any> = Record<string, (this: S, ...args: any) => any>
+export type ActionsTree = Record<string, (...args: any[]) => any>
+export type Getters<S = any> = Record<string, (this: S) => any>
 
 export type ActionsOmitThisParameter<A extends Actions<any>> = {
   [K in keyof A]: (...args: Parameters<A[K]>) => ReturnType<A[K]>
@@ -16,10 +17,10 @@ export type GettersReturnType<G extends Getters<any>> = {
   [K in keyof G]: ReturnType<G[K]>
 }
 
-export interface StoreDefine<S extends object, A extends Actions<S>, G extends Getters<S>> {
+export interface StoreDefine<S extends object, A extends ActionsTree, G extends Getters<any>> {
   state: (() => S) | S
-  actions?: A
-  getters?: G
+  actions?: A & ThisType<A & S & GettersReturnType<G>>
+  getters?: G & ThisType<S & GettersReturnType<G>>
 }
 
 export interface StoreOptions<S extends object = Record<string, unknown>> {
@@ -47,7 +48,7 @@ export type Store<S, A extends Actions<S>, G extends Getters<S>> = {
   $getters: GettersReturnType<G>
   $status: ActionsStatus<A>
   $signal: StoreSignal<S, A, G>
-} & ActionsOmitThisParameter<A>
+} & S & GettersReturnType<G> & ActionsOmitThisParameter<A>
 
 export interface PersistentOptions<S extends object = Record<string, unknown>> {
   key?: string

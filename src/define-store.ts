@@ -1,5 +1,14 @@
 /* eslint-disable ts/ban-ts-comment */
-import type { Actions, ActionsStatus, Getters, GettersReturnType, Store, StoreDefine, StoreOptions } from './types'
+import type {
+  Actions,
+  ActionsStatus,
+  ActionsTree,
+  Getters,
+  GettersReturnType,
+  Store,
+  StoreDefine,
+  StoreOptions,
+} from './types'
 import { createElement } from 'react'
 import { proxy, ref, subscribe, useSnapshot } from 'valtio'
 import { subscribeKey } from 'valtio/utils'
@@ -34,7 +43,7 @@ import { track } from './utils'
  *
  * ```
  */
-export function defineStore<S extends object, A extends Actions<S>, G extends Getters<S>>(store: StoreDefine<S, A, G> & StoreOptions<S>): Store<S, A, G> {
+export function defineStore<S extends object, A extends ActionsTree, G extends Getters<S>>(store: StoreDefine<S, A, G> & StoreOptions<S>): Store<S, A & Actions<S>, G> {
   const state = typeof store.state === 'function' ? store.state() : store.state
 
   const getters: any = store.getters || {}
@@ -85,7 +94,7 @@ export function defineStore<S extends object, A extends Actions<S>, G extends Ge
     return createElement(() => fn(useSnapshot($status)))
   }
 
-  return {
+  const base = {
     $subscribe,
     $patch,
     $state,
@@ -93,8 +102,52 @@ export function defineStore<S extends object, A extends Actions<S>, G extends Ge
     $actions,
     $getters,
     $signal,
-    ...$actions,
   }
+
+  // 创建一个代理，使 store 可以直接访问 $actions、$state 中的 state 和 getters
+  return new Proxy(base, {
+    get(target, prop) {
+      // 如果属性已经在 base 中，直接返回
+      if (prop in target) {
+        return target[prop as keyof typeof target]
+      }
+      // 先检查 $actions（actions 不可枚举，所以不会在 $state 的 ownKeys 中）
+      if (prop in $actions) {
+        return $actions[prop as keyof typeof $actions]
+      }
+      // 否则从 $state 中获取（包括 state 和 getters）
+      return $state[prop as keyof typeof $state]
+    },
+    has(target, prop) {
+      return prop in target || prop in $actions || prop in $state
+    },
+    ownKeys(target) {
+      // 返回所有可枚举的键
+      const stateKeys = Object.keys($state).filter((key) => {
+        const descriptor = Object.getOwnPropertyDescriptor($state, key)
+        return descriptor?.enumerable !== false
+      })
+      const actionKeys = Object.keys($actions)
+      return [...new Set([...Object.keys(target), ...stateKeys, ...actionKeys])]
+    },
+    getOwnPropertyDescriptor(target, prop) {
+      if (prop in target) {
+        return Object.getOwnPropertyDescriptor(target, prop)
+      }
+      if (prop in $actions) {
+        return {
+          enumerable: true,
+          configurable: true,
+          value: $actions[prop as keyof typeof $actions],
+        }
+      }
+      const descriptor = Object.getOwnPropertyDescriptor($state, prop)
+      if (descriptor && descriptor.enumerable !== false) {
+        return descriptor
+      }
+      return undefined
+    },
+  }) as Store<S, A & Actions<S>, G>
 }
 
 function setupActions($state: any, actions: any, $actions: any, $status: any): void {
