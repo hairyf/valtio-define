@@ -48,7 +48,7 @@ export function defineStore<S extends object, A extends ActionsTree, G extends G
 
   const $actions: any = {}
   const $getters: any = {}
-  const $plugins: Plugin[] = []
+  const $plugins = new WeakSet<Plugin>()
 
   for (const key in actions) {
     $actions[key] = ref(actions[key].bind($state))
@@ -84,6 +84,7 @@ export function defineStore<S extends object, A extends ActionsTree, G extends G
 
   function use(plugin: Plugin): void {
     plugins.push(plugin)
+    apply(plugin)
   }
 
   const base = {
@@ -116,8 +117,19 @@ export function defineStore<S extends object, A extends ActionsTree, G extends G
     },
   })
 
-  for (const plugin of [...plugins, ...$plugins])
+  function apply(plugin: Plugin) {
+    if ($plugins.has(plugin))
+      return
+    $plugins.add(plugin)
     plugin({ store, options: define })
+  }
 
+  for (const plugin of plugins)
+    apply(plugin)
+
+  subscribe(plugins, () => {
+    for (const plugin of plugins)
+      apply(plugin)
+  })
   return store
 }
