@@ -9,7 +9,7 @@ export function persistent(): Plugin {
   return (context) => {
     if (!context.options.persist)
       return
-    const options = context.options.persist
+    const options = typeof context.options.persist === 'boolean' ? { } : context.options.persist
     options.key = options.key || generateStructureId(context.store.$state)
     const storage = options.storage || (typeof localStorage !== 'undefined' ? localStorage : undefined)
     const value = storage?.getItem(options.key)
@@ -63,6 +63,6 @@ export interface PersistentOptions<S extends object = Record<string, unknown>> {
 declare module 'valtio-define/types' {
   // eslint-disable-next-line unused-imports/no-unused-vars
   export interface StoreDefine<S extends object, A extends ActionsTree, G extends Getters<any>> {
-    persist?: PersistentOptions<S>
+    persist?: PersistentOptions<S> | boolean
   }
 }
