@@ -1,5 +1,11 @@
 .:
+  default: object
   defineStore: function
-  proxyWithPersistent: function
-  useStatus: function
+  plugins: object
+  use: function
   useStore: function
+./plugins:
+  persistent: function
+./plugins/persistent:
+  persistent: function
+./types: {}

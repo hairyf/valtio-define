@@ -4,6 +4,7 @@ import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
   plugins: [react()],
+  assetsInclude: ['**/*.yaml'],
   test: {
     globals: true,
     projects: [

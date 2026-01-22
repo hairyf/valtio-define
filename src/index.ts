@@ -1,4 +1,7 @@
-export * from './define-store'
-export * from './persistent'
-export * from './use-status'
-export * from './use-store'
+import { use } from './plugin'
+
+export * from './define'
+export * from './plugin'
+export * from './use'
+
+export default { use }

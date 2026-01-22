@@ -6,13 +6,6 @@ export type ActionsOmitThisParameter<A extends Actions<any>> = {
   [K in keyof A]: (...args: Parameters<A[K]>) => ReturnType<A[K]>
 }
 
-export interface Status {
-  finished: boolean
-  loading: boolean
-  error?: Error
-}
-
-export type ActionsStatus<A extends Actions<any>> = Status & { [K in keyof A]: Status }
 export type GettersReturnType<G extends Getters<any>> = {
   [K in keyof G]: ReturnType<G[K]>
 }
@@ -23,36 +16,39 @@ export interface StoreDefine<S extends object, A extends ActionsTree, G extends 
   getters?: G & ThisType<S & GettersReturnType<G>>
 }
 
-export interface StoreOptions<S extends object = Record<string, unknown>> {
-  persist?: boolean | PersistentOptions<S>
+export interface Signal<S, G extends Getters<S>> {
+  <T>(fn: (state: S & GettersReturnType<G>) => T): T
 }
 
-export interface StoreSignal<S, A extends Actions<S>, G extends Getters<S>> {
-  <T>(fn: (state: S & GettersReturnType<G>) => T): T
-  status: <T>(fn: (status: ActionsStatus<A>) => T) => T
+type Path = (string | symbol)[]
+type Op = [op: 'set', path: Path, value: unknown, prevValue: unknown] | [op: 'delete', path: Path, prevValue: unknown]
+
+export interface Subscribe<S, G extends Getters<S>> {
+  (listener: (state: S & GettersReturnType<G>, opts: Op) => void): () => void
 }
-export interface StoreSubscribe<S, A extends Actions<S>, G extends Getters<S>> {
-  (listener: (state: S & GettersReturnType<G>) => void): () => void
-  status: (listener: (status: ActionsStatus<A>) => void) => () => void
-  key: <K extends keyof S | keyof G>(key: K, listener: (state: (S & GettersReturnType<G>)[K]) => void) => () => void
+export interface SubscribeKey<S, G extends Getters<S>> {
+  <T extends keyof S | keyof G>(key: T, listener: (state: (S & GettersReturnType<G>)[T]) => void): () => void
 }
-export interface StorePatch<S, G extends Getters<S>> {
+export interface Patch<S, G extends Getters<S>> {
   (patch: Partial<S> | ((state: S & GettersReturnType<G>) => void)): void
 }
 
 export type Store<S, A extends Actions<S>, G extends Getters<S>> = {
-  $subscribe: StoreSubscribe<S, A, G>
-  $patch: StorePatch<S, G>
+  $subscribe: Subscribe<S, G>
+  $subscribeKey: SubscribeKey<S, G>
+  $patch: Patch<S, G>
   $state: S & GettersReturnType<G> & ActionsOmitThisParameter<A>
   $actions: ActionsOmitThisParameter<A>
   $getters: GettersReturnType<G>
-  $status: ActionsStatus<A>
-  $signal: StoreSignal<S, A, G>
+  use: (plugin: Plugin) => void
+  $signal: Signal<S, G>
 } & S & GettersReturnType<G> & ActionsOmitThisParameter<A>
 
-export interface PersistentOptions<S extends object = Record<string, unknown>> {
-  key?: string
-  storage?: Partial<Storage> & Pick<Storage, 'getItem' | 'setItem'>
-  paths?: (keyof S)[]
-  initial?: (initialState: S) => any | Promise<any>
+export interface PluginContext<S extends object = Record<string, unknown>> {
+  store: Store<S, Actions<S>, Getters<S>>
+  options: StoreDefine<S, ActionsTree, Getters<S>>
+}
+
+export interface Plugin {
+  <S extends object = Record<string, unknown>>(context: PluginContext<S>): void
 }

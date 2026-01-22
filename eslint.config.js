@@ -5,5 +5,8 @@ export default antfu(
   {
     type: 'app',
     pnpm: true,
+    rules: {
+      'yaml/sort-keys': 'off',
+    },
   },
 )

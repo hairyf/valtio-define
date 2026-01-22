@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import {
   defineStore,
-  proxyWithPersistent,
-  useStatus,
+  plugins,
+  use,
   useStore,
 } from '../src'
 
@@ -17,13 +17,13 @@ describe('exports', () => {
     expect(typeof useStore).toBe('function')
   })
 
-  it('should export useStatus', () => {
-    expect(useStatus).toBeDefined()
-    expect(typeof useStatus).toBe('function')
+  it('should export use', () => {
+    expect(use).toBeDefined()
+    expect(typeof use).toBe('function')
   })
 
-  it('should export proxyWithPersistent', () => {
-    expect(proxyWithPersistent).toBeDefined()
-    expect(typeof proxyWithPersistent).toBe('function')
+  it('should export plugins', () => {
+    expect(plugins).toBeDefined()
+    expect(typeof plugins).toBe('object')
   })
 })

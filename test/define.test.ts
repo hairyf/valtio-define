@@ -1,6 +1,6 @@
 import { delay } from '@hairy/utils'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { defineStore } from '../src/define-store'
+import { defineStore } from '../src/define'
 
 describe('defineStore', () => {
   beforeEach(() => {
@@ -120,29 +120,6 @@ describe('defineStore', () => {
       expect(result).toBe(1)
       expect(store.$state.count).toBe(1)
     })
-
-    it('should track action status for sync actions', async () => {
-      const store = defineStore({
-        state: { count: 0 },
-        actions: {
-          increment() {
-            this.count++
-          },
-        },
-      })
-
-      expect(store.$status.increment.loading).toBe(false)
-      expect(store.$status.increment.finished).toBe(false)
-      expect(store.$status.increment.error).toBe(undefined)
-
-      store.increment()
-
-      // Sync actions should finish immediately
-      await vi.waitFor(() => {
-        expect(store.$status.increment.finished).toBe(true)
-        expect(store.$status.increment.loading).toBe(false)
-      })
-    })
   })
 
   describe('async actions', () => {
@@ -158,47 +135,12 @@ describe('defineStore', () => {
         },
       })
 
-      expect(store.$status.fetchData.loading).toBe(false)
-      expect(store.$status.fetchData.finished).toBe(false)
-
       const promise = store.fetchData()
-
-      expect(store.$status.fetchData.loading).toBe(true)
-      expect(store.$status.fetchData.finished).toBe(false)
 
       const result = await promise
 
-      expect(store.$status.fetchData.loading).toBe(false)
-      expect(store.$status.fetchData.finished).toBe(true)
-      expect(store.$status.fetchData.error).toBe(undefined)
       expect(result.value).toBe(42)
       expect(store.$state.data.value).toBe(42)
-    })
-
-    it('should handle async action errors', async () => {
-      const error = new Error('Test error')
-      const store = defineStore({
-        state: { data: null },
-        actions: {
-          async fetchData() {
-            await new Promise(resolve => setTimeout(resolve, 10))
-            throw error
-          },
-        },
-      })
-
-      expect(store.$status.fetchData.error).toBe(undefined)
-
-      try {
-        await store.fetchData()
-      }
-      catch (e) {
-        expect(e).toBe(error)
-      }
-
-      expect(store.$status.fetchData.loading).toBe(false)
-      expect(store.$status.fetchData.finished).toBe(false)
-      expect(store.$status.fetchData.error).toBe(error)
     })
 
     it('should track concurrent async actions', async () => {
@@ -215,16 +157,12 @@ describe('defineStore', () => {
       const promise1 = store.delay(20)
       const promise2 = store.delay(30)
 
-      expect(store.$status.delay.loading).toBe(true)
-
       await promise1
 
-      expect(store.$status.delay.loading).toBe(true)
       expect(store.$state.count).toBe(1)
 
       await promise2
 
-      expect(store.$status.delay.loading).toBe(false)
       expect(store.$state.count).toBe(2)
     })
   })
@@ -310,101 +248,6 @@ describe('defineStore', () => {
     })
   })
 
-  describe('status', () => {
-    it('should have initial status', () => {
-      const store = defineStore({
-        state: { count: 0 },
-        actions: {
-          increment() {
-            this.count++
-          },
-        },
-      })
-
-      expect(store.$status.loading).toBe(false)
-      expect(store.$status.finished).toBe(false)
-      expect(store.$status.error).toBe(undefined)
-      expect(store.$status.increment.loading).toBe(false)
-      expect(store.$status.increment.finished).toBe(false)
-      expect(store.$status.increment.error).toBe(undefined)
-    })
-
-    it('should track global loading state', async () => {
-      const store = defineStore({
-        state: { count: 0 },
-        actions: {
-          async action1() {
-            await new Promise(resolve => setTimeout(resolve, 20))
-          },
-          async action2() {
-            await new Promise(resolve => setTimeout(resolve, 30))
-          },
-        },
-      })
-
-      const promise1 = store.action1()
-      expect(store.$status.loading).toBe(true)
-
-      const promise2 = store.action2()
-      expect(store.$status.loading).toBe(true)
-
-      await promise1
-      expect(store.$status.loading).toBe(true)
-
-      await promise2
-      expect(store.$status.loading).toBe(false)
-    })
-
-    it('should track global finished state', async () => {
-      const store = defineStore({
-        state: { count: 0 },
-        actions: {
-          async action1() {
-            await new Promise(resolve => setTimeout(resolve, 10))
-          },
-          async action2() {
-            await new Promise(resolve => setTimeout(resolve, 10))
-          },
-        },
-      })
-
-      expect(store.$status.finished).toBe(false)
-
-      await store.action1()
-      expect(store.$status.finished).toBe(false)
-
-      await store.action2()
-      expect(store.$status.finished).toBe(true)
-    })
-
-    it('should track global error state', async () => {
-      const error = new Error('Test error')
-      const store = defineStore({
-        state: { count: 0 },
-        actions: {
-          async action1() {
-            await new Promise(resolve => setTimeout(resolve, 10))
-          },
-          async action2() {
-            await new Promise(resolve => setTimeout(resolve, 10))
-            throw error
-          },
-        },
-      })
-
-      await store.action1()
-
-      try {
-        await store.action2()
-      }
-      catch {
-        // ignore
-      }
-
-      expect(store.$status.error).toBe(error)
-    })
-  })
-
   describe('$subscribe', () => {
     it('should subscribe to state changes', async () => {
       const store = defineStore({
@@ -426,33 +269,6 @@ describe('defineStore', () => {
       store.$state.count = 3
       await delay(0)
       expect(listener).toHaveBeenCalledTimes(2)
-    })
-
-    it('should subscribe to status changes', async () => {
-      const store = defineStore({
-        state: { count: 0 },
-        actions: {
-          async increment() {
-            await new Promise(resolve => setTimeout(resolve, 10))
-            this.count++
-          },
-        },
-      })
-
-      const listener = vi.fn()
-      const unsubscribe = store.$subscribe.status(listener)
-
-      await store.increment()
-
-      expect(listener).toHaveBeenCalled()
-
-      unsubscribe()
-      await store.increment()
-      // Should not trigger after unsubscribe
-      const callCount = listener.mock.calls.length
-
-      await new Promise(resolve => setTimeout(resolve, 20))
-      expect(listener.mock.calls.length).toBe(callCount)
     })
   })
 

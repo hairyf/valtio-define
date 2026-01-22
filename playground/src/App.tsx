@@ -1,7 +1,11 @@
-import { defineStore, useStatus, useStore } from 'valtio-define'
+import valtio, { defineStore, useStore } from 'valtio-define'
+import { persistent } from 'valtio-define/plugins/persistent'
+
 import reactLogo from './assets/react.svg'
 import './App.css'
 import viteLogo from '/vite.svg'
+
+valtio.use(persistent())
 
 const store = defineStore({
   state: () => ({
@@ -28,7 +32,6 @@ const store = defineStore({
 
 function App() {
   const counter = useStore(store)
-  const status = useStatus(store)
 
   return (
     <>
@@ -65,21 +68,6 @@ function App() {
         doubled is
         {' '}
         {counter.doubled}
-      </p>
-      <p>
-        status is
-        {' '}
-        {status.delay.loading ? 'loading' : 'not loading'}
-      </p>
-      <p>
-        status is
-        {' '}
-        {status.delay.finished ? 'finished' : 'not finished'}
-      </p>
-      <p>
-        status is
-        {' '}
-        {status.delay.error ? 'error' : 'not error'}
       </p>
     </>
   )

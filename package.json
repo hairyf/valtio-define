@@ -19,6 +19,9 @@
       ".": "./dist/index.mjs",
       "./package.json": "./package.json"
     },
+    "./plugins": "./dist/plugins/index.mjs",
+    "./plugins/persistent": "./dist/plugins/persistent/index.mjs",
+    "./types": "./dist/types/index.mjs",
     "main": "./dist/index.mjs",
     "module": "./dist/index.mjs",
     "types": "./dist/index.d.mts",
@@ -26,7 +29,10 @@
   },
   "exports": {
     ".": "./src/index.ts",
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./plugins": "./src/plugins/index.ts",
+    "./plugins/persistent": "./src/plugins/persistent/index.ts",
+    "./types": "./src/types/index.ts"
   },
   "main": "./src/index.ts",
   "module": "./src/index.ts",
@@ -50,6 +56,7 @@
   },
   "dependencies": {
     "@hairy/utils": "catalog:",
+    "destr": "catalog:",
     "structure-id": "catalog:",
     "valtio": "catalog:"
   },
