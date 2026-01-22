@@ -35,7 +35,7 @@ export interface Patch<S, G extends Getters<S>> {
   (patch: Partial<S> | ((state: S & GettersReturnType<G>) => void)): void
 }
 
-export type Store<S, A extends Actions<S>, G extends Getters<S>> = {
+export type Store<S, A extends Actions<S> = Actions<S>, G extends Getters<S> = Getters<S>> = {
   $subscribe: Subscribe<S, G>
   $subscribeKey: SubscribeKey<S, G>
   $patch: Patch<S, G>

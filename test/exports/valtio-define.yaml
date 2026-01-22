@@ -2,6 +2,8 @@
   default: object
   defineStore: function
   plugins: object
+  storeToState: function
+  storeToStates: function
   use: function
   useStore: function
 ./plugins:

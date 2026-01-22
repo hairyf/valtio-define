@@ -32,10 +32,10 @@ const store = defineStore({
 })
 
 function Counter() {
-  const { count, increment } = useStore(store)
+  const { count } = useStore(store)
   return (
     <div>
-      <button onClick={increment}>Increment</button>
+      <button onClick={store.increment}>Increment</button>
       <div>{count}</div>
     </div>
   )
