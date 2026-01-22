@@ -4,6 +4,7 @@
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
 [![bundle][bundle-src]][bundle-href]
 [![JSDocs][jsdocs-src]][jsdocs-href]
+[![coverage][coverage-src]][coverage-href]
 [![License][license-src]][license-href]
 
 ⚡ Quickly create a fully functional and robust Valtio factory
@@ -76,49 +77,25 @@ function Counter() {
 }
 ```
 
-### Async Actions with Status
-
-```tsx
-import { defineStore, useStatus, useStore } from 'valtio-define'
-
-const store = defineStore({
-  state: () => ({ data: null }),
-  actions: {
-    async fetchData() {
-      const response = await fetch('/api/data')
-      this.data = await response.json()
-    },
-  },
-})
-
-function DataComponent() {
-  const state = useStore(store)
-  const status = useStatus(store)
-
-  return (
-    <div>
-      {status.loading && <div> Store all actions are loading...</div>}
-      {status.finished && <div> Store all actions are finished...</div>}
-      {status.error && <div> Store all actions are error...</div>}
-
-      {status.fetchData.finished && <div> Data fetched successfully...</div>}
-      {status.fetchData.error && (
-        <div>
-          {' '}
-          Error fetching data:
-          {status.fetchData.error.message}
-        </div>
-      )}
-      {state.data && <div>{JSON.stringify(state.data)}</div>}
-      <button onClick={store.fetchData}>Fetch Data</button>
-    </div>
-  )
-}
-```
-
 ### Persistence
 
+The persistence plugin allows you to persist store state to storage (e.g., localStorage).
+
+First, register the persistent plugin:
+
 ```tsx
+import valtio from 'valtio-define'
+import { persistent } from 'valtio-define/plugins'
+
+// Register the persistent plugin globally
+valtio.use(persistent())
+```
+
+Then use it in your store:
+
+```tsx
+import { defineStore } from 'valtio-define'
+
 const store = defineStore({
   state: () => ({ count: 0 }),
   actions: {
@@ -126,11 +103,22 @@ const store = defineStore({
       this.count++
     },
   },
-  persist: true // or { key: 'my-store', storage: localStorage, paths: ['count'] }
+  persist: {
+    key: 'my-store',
+    storage: localStorage,
+    paths: ['count'], // Only persist 'count', or omit to persist all state
+  },
 })
 ```
 
-If the persist is a boolean value, it will use `structure-id` to generate a unique key for the store.
+If `persist` is `true`, it will use `structure-id` to generate a unique key for the store automatically.
+
+```tsx
+const store = defineStore({
+  state: () => ({ count: 0 }),
+  persist: true, // Auto-generates key using structure-id
+})
+```
 
 ### Subscribe to Changes
 
@@ -149,9 +137,9 @@ const unsubscribe = store.$subscribe((state) => {
   console.log('State changed:', state)
 })
 
-// Subscribe to status changes
-const unsubscribeStatus = store.$subscribe.status((status) => {
-  console.log('Status changed:', status)
+// Subscribe to specific key changes
+const unsubscribeKey = store.$subscribeKey('count', (value) => {
+  console.log('Count changed:', value)
 })
 ```
 
@@ -173,15 +161,9 @@ store.$patch((state) => {
 function App() {
   return (
     <div>
-      {store.$signal(state => (
-        <div>
-          Count:
-          {state.count}
-        </div>
-      ))}
-      {store.$signal.status(status => (
-        status.loading && <div>Loading...</div>
-      ))}
+      Count:
+      {' '}
+      {store.$signal(state => state.count)}
     </div>
   )
 }
@@ -197,7 +179,7 @@ Creates a store with state, actions, and getters.
 - `store.state`: Initial state object or factory function
 - `store.actions`: Object containing action methods
 - `store.getters`: Object containing getter methods
-- `store.persist`: Persistence configuration (boolean or object)
+- `store.persist`: Persistence plugin configuration (boolean or object) - see [Persistence Plugin](#persistence-plugin)
 
 **Returns:** Store instance with reactive state and actions
 
@@ -210,26 +192,68 @@ React hook that returns a snapshot of the store state.
 
 **Returns:** Snapshot of the store state
 
-### `useStatus(store)`
+### Plugins
 
-React hook that returns the status of all actions.
+Plugins allow you to extend store functionality. You can use plugins globally or per-store.
 
-**Parameters:**
-- `store`: Store instance created by `defineStore`
+#### Global Plugin Registration
 
-**Returns:** Status object with loading, finished, and error states
+```tsx
+import { use } from 'valtio-define'
+import { persistent } from 'valtio-define/plugins'
 
-### `proxyWithPersistent(initialObject, options?)`
+// Register plugin globally - applies to all stores
+use(persistent())
+```
 
-Creates a persistent proxy state.
+#### Per-Store Plugin Registration
 
-**Parameters:**
-- `initialObject`: Initial state object
-- `options.key`: Storage key (auto-generated if not provided)
-- `options.storage`: Storage instance (defaults to localStorage)
-- `options.paths`: Array of paths to persist (defaults to all)
+```tsx
+import { defineStore } from 'valtio-define'
+import { persistent } from 'valtio-define/plugins'
 
-**Returns:** Persistent proxy state
+const store = defineStore({
+  state: () => ({ count: 0 }),
+})
+
+// Register plugin for this specific store
+store.use(persistent())
+```
+
+#### Creating Custom Plugins
+
+```tsx
+import type { Plugin } from 'valtio-define'
+
+function myPlugin() {
+  ({ store, options }: PluginContext) => {
+    // Access store methods
+    store.$subscribe((state) => {
+      console.log('State changed:', state)
+    })
+
+    // Access store options
+    if (options.someOption) {
+    // Do something
+    }
+  }
+}
+
+declare module 'valtio-define/types' {
+  export interface StoreDefine<S extends object, A extends ActionsTree, G extends Getters<any>> {
+    myPlugin?: {
+      someOption?: boolean
+    }
+  }
+}
+
+// Use the plugin
+use(myPlugin)
+```
+
+**Plugin Context:**
+- `context.store`: The store instance with all methods (`$state`, `$patch`, `$subscribe`, etc.)
+- `context.options`: The original store definition options
 
 ## License
 
@@ -247,3 +271,5 @@ Creates a persistent proxy state.
 [license-href]: https://github.com/hairyf/valtio-define/blob/main/LICENSE
 [jsdocs-src]: https://img.shields.io/badge/jsdocs-reference-080f12?style=flat&colorA=080f12&colorB=1fa669
 [jsdocs-href]: https://www.jsdocs.io/package/valtio-define
+[coverage-src]: https://img.shields.io/codecov/c/github/hairyf/valtio-define?style=flat&colorA=080f12&colorB=1fa669&token=
+[coverage-href]: https://codecov.io/gh/hairyf/valtio-define
