@@ -1,3 +1,4 @@
+import type { Awaitable } from '@hairy/utils'
 import type { Plugin } from '../../types'
 import { get, set } from '@hairy/utils'
 import { destr } from 'destr'
@@ -9,7 +10,7 @@ export function persistent(): Plugin {
     const options = context.options.persist || {}
     options.key = options.key || generateStructureId(context.store.$state)
     const storage = options.storage || (typeof localStorage !== 'undefined' ? localStorage : undefined)
-    const value: any = storage?.getItem(options.key)
+    const value = storage?.getItem(options.key)
     // 记录状态，避免死循环
     let __watch = false
 
@@ -37,10 +38,23 @@ export function persistent(): Plugin {
   }
 }
 
-export type DeepKeys<T> = T extends object ? (keyof T & string) | `${DeepKeys<T[keyof T & string]>}.${string}` : never
+export type DeepKeys<T> = T extends object
+  ? {
+      [K in keyof T & string]: T[K] extends object
+        ? K | `${K}.${DeepKeys<T[K]>}`
+        : K
+    }[keyof T & string]
+  : never
+
+export interface Storage {
+  getItem: (key: string) => Awaitable<any>
+  setItem: (key: string, value: any) => Awaitable<void>
+  [key: string]: any
+}
+
 export interface PersistentOptions<S extends object = Record<string, unknown>> {
   key?: string
-  storage?: Partial<Storage> & Pick<Storage, 'getItem' | 'setItem'>
+  storage?: Storage
   paths?: DeepKeys<S>[]
 }
 

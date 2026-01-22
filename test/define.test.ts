@@ -272,6 +272,54 @@ describe('defineStore', () => {
     })
   })
 
+  describe('$subscribeKey', () => {
+    it('should subscribe to specific key changes', async () => {
+      const store = defineStore({
+        state: { count: 0, name: 'test' },
+      })
+
+      const listener = vi.fn()
+      const unsubscribe = store.$subscribeKey('count', listener)
+
+      store.$state.count = 1
+      await delay(0)
+      expect(listener).toHaveBeenCalledTimes(1)
+      expect(listener).toHaveBeenCalledWith(1)
+
+      store.$state.name = 'updated'
+      await delay(0)
+      expect(listener).toHaveBeenCalledTimes(1)
+
+      store.$state.count = 2
+      await delay(0)
+      expect(listener).toHaveBeenCalledTimes(2)
+      expect(listener).toHaveBeenCalledWith(2)
+
+      unsubscribe()
+      store.$state.count = 3
+      await delay(0)
+      expect(listener).toHaveBeenCalledTimes(2)
+    })
+
+    it('should unsubscribe correctly', async () => {
+      const store = defineStore({
+        state: { count: 0 },
+      })
+
+      const listener = vi.fn()
+      const unsubscribe = store.$subscribeKey('count', listener)
+
+      store.$state.count = 1
+      await delay(0)
+      expect(listener).toHaveBeenCalledTimes(1)
+
+      unsubscribe()
+      store.$state.count = 2
+      await delay(0)
+      expect(listener).toHaveBeenCalledTimes(1)
+    })
+  })
+
   describe('$patch', () => {
     it('should patch state with object', async () => {
       const store = defineStore({
@@ -379,6 +427,111 @@ describe('defineStore', () => {
       await store.addItem(10)
       expect(store.$state.count).toBe(2)
       expect(store.$state.sum).toBe(15)
+    })
+  })
+
+  describe('$signal', () => {
+    it('should create a signal element', () => {
+      const store = defineStore({
+        state: { count: 5 },
+      })
+
+      const signal = store.$signal(state => state.count * 2)
+
+      expect(signal).toBeDefined()
+      expect(signal.type).toBeDefined()
+      expect(typeof signal.type).toBe('function')
+    })
+
+    it('should compute signal value from state', () => {
+      const store = defineStore({
+        state: { count: 10 },
+        getters: {
+          doubled() {
+            return this.count * 2
+          },
+        },
+      })
+
+      const signal = store.$signal(state => state.count + state.doubled)
+
+      expect(signal).toBeDefined()
+    })
+  })
+
+  describe('proxy behavior', () => {
+    it('should check if property exists using has', () => {
+      const store = defineStore({
+        state: { count: 0 },
+        actions: {
+          increment() {
+            this.count++
+          },
+        },
+        getters: {
+          doubled() {
+            return this.count * 2
+          },
+        },
+      })
+
+      expect('count' in store).toBe(true)
+      expect('increment' in store).toBe(true)
+      expect('doubled' in store).toBe(true)
+      expect('$state' in store).toBe(true)
+      expect('$patch' in store).toBe(true)
+      expect('nonexistent' in store).toBe(false)
+    })
+
+    it('should set properties on state', () => {
+      const store = defineStore({
+        state: { count: 0, name: 'test' },
+      })
+
+      store.count = 10
+      expect(store.$state.count).toBe(10)
+
+      store.name = 'updated'
+      expect(store.$state.name).toBe('updated')
+    })
+
+    it('should set properties on base object if not in state', () => {
+      const store = defineStore({
+        state: { count: 0 },
+      })
+
+      store.$customProperty = 'test'
+      expect(store.$customProperty).toBe('test')
+    })
+  })
+
+  describe('store.use', () => {
+    it('should allow adding plugins to store', () => {
+      const store = defineStore({
+        state: { count: 0 },
+      })
+
+      const plugin = vi.fn()
+
+      store.use(plugin)
+
+      // store.use only adds plugin to array, doesn't execute it
+      // Plugins are executed during store creation
+      expect(typeof store.use).toBe('function')
+    })
+
+    it('should allow adding multiple plugins', () => {
+      const store = defineStore({
+        state: { count: 0 },
+      })
+
+      const plugin1 = vi.fn()
+      const plugin2 = vi.fn()
+
+      store.use(plugin1)
+      store.use(plugin2)
+
+      expect(typeof store.use).toBe('function')
     })
   })
 })

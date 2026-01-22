@@ -1,3 +1,5 @@
+import type { ReactElement } from 'react'
+
 export type Actions<S = any> = Record<string, (this: S, ...args: any) => any>
 export type ActionsTree = Record<string, (...args: any[]) => any>
 export type Getters<S = any> = Record<string, (this: S) => any>
@@ -17,7 +19,7 @@ export interface StoreDefine<S extends object, A extends ActionsTree, G extends 
 }
 
 export interface Signal<S, G extends Getters<S>> {
-  <T>(fn: (state: S & GettersReturnType<G>) => T): T
+  <T>(fn: (state: S & GettersReturnType<G>) => T): ReactElement
 }
 
 type Path = (string | symbol)[]
