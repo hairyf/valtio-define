@@ -271,5 +271,5 @@ use(myPlugin)
 [license-href]: https://github.com/hairyf/valtio-define/blob/main/LICENSE
 [jsdocs-src]: https://img.shields.io/badge/jsdocs-reference-080f12?style=flat&colorA=080f12&colorB=1fa669
 [jsdocs-href]: https://www.jsdocs.io/package/valtio-define
-[coverage-src]: https://img.shields.io/codecov/c/github/hairyf/valtio-define?style=flat&colorA=080f12&colorB=1fa669&token=
+[coverage-src]: https://codecov.io/gh/hairyf/valtio-define/graph/badge.svg?token=PG5YIEEEHJ
 [coverage-href]: https://codecov.io/gh/hairyf/valtio-define
