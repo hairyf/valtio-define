@@ -1,5 +1,5 @@
 ---
-name: valtio-define-skills
+name: valtio-define
 description: Comprehensive skills for working with valtio-define
 metadata:
   author: Hairyf
