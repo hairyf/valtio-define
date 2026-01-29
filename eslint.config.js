@@ -8,5 +8,8 @@ export default antfu(
     rules: {
       'yaml/sort-keys': 'off',
     },
+    ignores: [
+      '**/skills/**',
+    ],
   },
 )
