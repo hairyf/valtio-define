@@ -9,5 +9,6 @@
 ./plugins:
   persistent: function
 ./plugins/persistent:
+  default: function
   persistent: function
 ./types: {}

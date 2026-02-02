@@ -11,8 +11,11 @@ function persistent(): Plugin {
       return
     const options = typeof context.options.persist === 'boolean' ? { } : context.options.persist
     options.key = options.key || generateStructureId(context.store.$state)
-    const storage = options.storage || (typeof localStorage !== 'undefined' ? localStorage : undefined)
-    const value = storage?.getItem(options.key)
+    const raw = options.storage ?? (typeof localStorage !== 'undefined' ? localStorage : undefined)
+    const storage = (raw && typeof raw.getItem === 'function' && typeof raw.setItem === 'function')
+      ? raw
+      : undefined
+    const value = storage ? storage.getItem(options.key) : undefined
     // 记录状态，避免死循环
     let __watch = false
 

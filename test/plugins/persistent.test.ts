@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { defineStore } from '../../src/define'
 import { plugins, use } from '../../src/plugin'
-import { persistent } from '../../src/plugins/persistent'
+import persistent from '../../src/plugins/persistent'
 
 describe('persistent plugin', () => {
   let mockStorage: Partial<Storage> & Pick<Storage, 'getItem' | 'setItem'>
@@ -265,6 +265,21 @@ describe('persistent plugin', () => {
     // The key point is that during Object.assign in initialize,
     // the subscribe callback should hit the return on line 28
     // This is hard to test directly, but we can verify the behavior is correct
+  })
+
+  it('should not throw in server environment (no localStorage)', () => {
+    const originalLocalStorage = globalThis.localStorage
+    // @ts-expect-error - simulate SSR: remove localStorage
+    delete globalThis.localStorage
+
+    expect(() => {
+      defineStore({
+        state: { count: 0 },
+        persist: {},
+      })
+    }).not.toThrow()
+
+    globalThis.localStorage = originalLocalStorage
   })
 
   it('should return early when __watch is false during async initialization', async () => {
