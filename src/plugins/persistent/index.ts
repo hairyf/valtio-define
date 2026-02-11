@@ -5,7 +5,7 @@ import { destr } from 'destr'
 import { generateStructureId } from 'structure-id'
 import { subscribe } from 'valtio'
 
-function persistent(): Plugin {
+export function persistent(): Plugin {
   return (context) => {
     if (!context.options.persist)
       return
@@ -25,7 +25,15 @@ function persistent(): Plugin {
       initialize(value)
 
     function initialize(value: any) {
-      Object.assign(context.store.$state, destr(value))
+      const data = destr(value)
+      if (data && typeof data === 'object') {
+        const getters = context.options.getters
+        if (getters) {
+          for (const key of Object.keys(getters))
+            Reflect.deleteProperty(data, key)
+        }
+        Object.assign(context.store.$state, data)
+      }
       __watch = true
     }
 

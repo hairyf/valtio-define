@@ -325,4 +325,24 @@ describe('persistent plugin', () => {
     // The first change (when __watch was false) should not have triggered setItem
     // This verifies that line 28 return was executed
   })
+
+  it('should exclude getters from initialization', () => {
+    mockStorage.getItem = vi.fn(() => JSON.stringify({ count: 10, doubled: 100 }))
+
+    const store = defineStore({
+      state: { count: 0 },
+      getters: {
+        doubled() {
+          return this.count * 2
+        },
+      },
+      persist: {
+        storage: mockStorage,
+        key: 'test-store-getters',
+      },
+    })
+
+    expect(store.$state.count).toBe(10)
+    expect(store.$state.doubled).toBe(20)
+  })
 })
