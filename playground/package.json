@@ -15,13 +15,18 @@
     "valtio-define": "workspace:*"
   },
   "devDependencies": {
+    "@eslint/js": "catalog:cli",
     "@types/node": "catalog:types",
     "@types/react": "catalog:types",
     "@types/react-dom": "catalog:types",
     "@vitejs/plugin-react": "catalog:",
     "babel-plugin-react-compiler": "catalog:cli",
+    "eslint": "catalog:cli",
+    "eslint-plugin-react-hooks": "catalog:cli",
+    "eslint-plugin-react-refresh": "catalog:cli",
     "globals": "catalog:cli",
     "typescript": "catalog:cli",
+    "typescript-eslint": "catalog:cli",
     "vite": "catalog:cli"
   }
 }
