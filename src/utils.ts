@@ -1,6 +1,6 @@
 import type { Dispatch, SetStateAction } from 'react'
 import type { Store } from './types'
-import { useStore } from './use'
+import { useStore } from './hooks'
 
 export function storeToState<
   S extends object,

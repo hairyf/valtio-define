@@ -1,5 +1,5 @@
-import type { Awaitable } from '@hairy/utils'
 import type { Plugin } from '../../types'
+import type { PersistentOptions } from './types'
 import { get, set } from '@hairy/utils'
 import { destr } from 'destr'
 import { generateStructureId } from 'structure-id'
@@ -54,26 +54,6 @@ export function presist({ automount = true }: PersistentMountOptions = {}): Plug
     automount && mount()
     watch()
   }
-}
-
-export type DeepKeys<T> = T extends object
-  ? {
-      [K in keyof T & string]: T[K] extends object
-        ? K | `${K}.${DeepKeys<T[K]>}`
-        : K
-    }[keyof T & string]
-  : never
-
-export interface Storage {
-  getItem: (key: string) => Awaitable<any>
-  setItem: (key: string, value: any) => Awaitable<void>
-  [key: string]: any
-}
-
-export interface PersistentOptions<S extends object> {
-  key?: string
-  storage?: Storage
-  paths?: DeepKeys<S>[]
 }
 
 declare module 'valtio-define' {
