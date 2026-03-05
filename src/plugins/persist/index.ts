@@ -51,6 +51,7 @@ export function persist({ automount = true }: PersistentMountOptions = {}): Plug
       })
     }
 
+    context.store.persist = { mount }
     automount && mount()
     watch()
   }
