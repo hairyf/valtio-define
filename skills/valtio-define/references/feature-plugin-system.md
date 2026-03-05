@@ -81,7 +81,7 @@ function myPlugin() {
 }
 
 // Extend types for plugin options
-declare module 'valtio-define/types' {
+declare module 'valtio-define' {
   export interface StoreDefine<S extends object, A extends ActionsTree, G extends Getters<any>> {
     myOption?: boolean
   }

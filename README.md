@@ -85,14 +85,14 @@ function Counter() {
 
 The persistence plugin allows you to persist store state to storage (e.g., localStorage).
 
-First, register the persistent plugin:
+First, register the presist plugin:
 
 ```tsx
 import valtio from 'valtio-define'
-import { persistent } from 'valtio-define/plugins'
+import { presist } from 'valtio-define/plugins'
 
-// Register the persistent plugin globally
-valtio.use(persistent())
+// Register the presist plugin globally
+valtio.use(presist())
 ```
 
 Then use it in your store:
@@ -122,6 +122,18 @@ const store = defineStore({
   state: () => ({ count: 0 }),
   persist: true, // Auto-generates key using structure-id
 })
+```
+
+You can pass `automount` when registering the plugin (default `true`). When `true`, state is hydrated from storage as soon as the store is created. Set `automount: false` when you need to avoid running persistence during server-side rendering, and manually mount persist in your App entry instead:
+
+```tsx
+// Register with automount: false
+store.use(presist({ automount: false }))
+
+// In your App (client entry), after store is used:
+useEffect(() => {
+  store.use(presist({ automount: false }))
+}, [])
 ```
 
 ### Subscribe to Changes
@@ -306,24 +318,24 @@ Plugins allow you to extend store functionality. You can use plugins globally or
 
 ```tsx
 import valtio from 'valtio-define'
-import { persistent } from 'valtio-define/plugins'
+import { presist } from 'valtio-define/plugins'
 
 // Register plugin globally - applies to all stores
-valtio.use(persistent())
+valtio.use(presist())
 ```
 
 #### Per-Store Plugin Registration
 
 ```tsx
 import { defineStore } from 'valtio-define'
-import { persistent } from 'valtio-define/plugins'
+import { presist } from 'valtio-define/plugins'
 
 const store = defineStore({
   state: () => ({ count: 0 }),
 })
 
 // Register plugin for this specific store
-store.use(persistent())
+store.use(presist())
 ```
 
 #### Creating Custom Plugins
@@ -345,7 +357,7 @@ function myPlugin() {
   }
 }
 
-declare module 'valtio-define/types' {
+declare module 'valtio-define' {
   export interface StoreDefine<S extends object, A extends ActionsTree, G extends Getters<any>> {
     myPlugin?: {
       someOption?: boolean
@@ -354,7 +366,7 @@ declare module 'valtio-define/types' {
 }
 
 // Use the plugin
-use(myPlugin)
+use(myPlugin())
 ```
 
 **Plugin Context:**

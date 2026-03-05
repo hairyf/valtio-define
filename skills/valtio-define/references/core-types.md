@@ -64,7 +64,7 @@ type Getters<S = any> = Record<string, (this: S) => any>
 Plugins can extend `StoreDefine` via module augmentation:
 
 ```tsx
-declare module 'valtio-define/types' {
+declare module 'valtio-define' {
   export interface StoreDefine<S extends object, A extends ActionsTree, G extends Getters<any>> {
     myPlugin?: {
       someOption?: boolean

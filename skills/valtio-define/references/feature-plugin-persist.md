@@ -1,5 +1,5 @@
 ---
-name: feature-persistent-plugin
+name: feature-plugin-persist
 description: Persist store state to storage (localStorage, sessionStorage, etc.)
 ---
 
@@ -13,9 +13,9 @@ First, register the plugin globally:
 
 ```tsx
 import valtio from 'valtio-define'
-import { persistent } from 'valtio-define/plugins'
+import { persist } from 'valtio-define/plugins'
 
-valtio.use(persistent())
+valtio.use(persist())
 ```
 
 Then configure persistence in your store:
