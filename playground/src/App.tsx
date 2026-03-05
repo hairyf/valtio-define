@@ -1,11 +1,11 @@
 import valtio, { defineStore, useStore } from 'valtio-define'
-import { presist } from 'valtio-define/plugins/presist'
+import { persist } from 'valtio-define/plugins/persist'
 
 import reactLogo from './assets/react.svg'
 import './App.css'
 import viteLogo from '/vite.svg'
 
-valtio.use(presist())
+valtio.use(persist())
 
 const store = defineStore({
   state: () => ({

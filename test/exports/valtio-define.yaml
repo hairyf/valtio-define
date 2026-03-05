@@ -7,6 +7,6 @@
   use: function
   useStore: function
 ./plugins:
-  presist: function
-./plugins/presist:
-  presist: function
+  persist: function
+./plugins/persist:
+  persist: function

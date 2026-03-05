@@ -1,16 +1,16 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { defineStore } from '../../src/define'
 import { plugins, use } from '../../src/plugin'
-import { presist } from '../../src/plugins/presist'
+import { persist } from '../../src/plugins/persist'
 
-describe('presist plugin', () => {
+describe('persist plugin', () => {
   let mockStorage: Partial<Storage> & Pick<Storage, 'getItem' | 'setItem'>
 
   beforeEach(() => {
     // 清空插件数组
     plugins.length = 0
-    // 注册 presist 插件
-    use(presist())
+    // 注册 persist 插件
+    use(persist())
 
     mockStorage = {
       getItem: vi.fn(),
@@ -23,11 +23,11 @@ describe('presist plugin', () => {
   })
 
   it('should be a function', () => {
-    expect(typeof presist).toBe('function')
+    expect(typeof persist).toBe('function')
   })
 
   it('should return a plugin function', () => {
-    const plugin = presist()
+    const plugin = persist()
     expect(typeof plugin).toBe('function')
   })
 
@@ -364,7 +364,7 @@ describe('presist plugin', () => {
 
     it('should not call getItem when automount: false', () => {
       plugins.length = 0
-      use(presist({ automount: false }))
+      use(persist({ automount: false }))
 
       mockStorage.getItem = vi.fn(() => JSON.stringify({ count: 99 }))
 
@@ -383,7 +383,7 @@ describe('presist plugin', () => {
 
     it('should not persist when automount: false (isHydrated stays false)', async () => {
       plugins.length = 0
-      use(presist({ automount: false }))
+      use(persist({ automount: false }))
 
       mockStorage.getItem = vi.fn(() => null)
       mockStorage.setItem = vi.fn()

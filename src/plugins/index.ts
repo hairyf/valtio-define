@@ -1,1 +1,1 @@
-export * from './presist'
+export * from './persist'

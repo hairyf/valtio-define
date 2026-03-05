@@ -85,14 +85,14 @@ function Counter() {
 
 The persistence plugin allows you to persist store state to storage (e.g., localStorage).
 
-First, register the presist plugin:
+First, register the persist plugin:
 
 ```tsx
 import valtio from 'valtio-define'
-import { presist } from 'valtio-define/plugins'
+import { persist } from 'valtio-define/plugins'
 
-// Register the presist plugin globally
-valtio.use(presist())
+// Register the persist plugin globally
+valtio.use(persist())
 ```
 
 Then use it in your store:
@@ -128,11 +128,11 @@ You can pass `automount` when registering the plugin (default `true`). When `tru
 
 ```tsx
 // Register with automount: false
-store.use(presist({ automount: false }))
+store.use(persist({ automount: false }))
 
 // In your App (client entry), after store is used:
 useEffect(() => {
-  store.use(presist({ automount: false }))
+  store.use(persist({ automount: false }))
 }, [])
 ```
 
@@ -318,24 +318,24 @@ Plugins allow you to extend store functionality. You can use plugins globally or
 
 ```tsx
 import valtio from 'valtio-define'
-import { presist } from 'valtio-define/plugins'
+import { persist } from 'valtio-define/plugins'
 
 // Register plugin globally - applies to all stores
-valtio.use(presist())
+valtio.use(persist())
 ```
 
 #### Per-Store Plugin Registration
 
 ```tsx
 import { defineStore } from 'valtio-define'
-import { presist } from 'valtio-define/plugins'
+import { persist } from 'valtio-define/plugins'
 
 const store = defineStore({
   state: () => ({ count: 0 }),
 })
 
 // Register plugin for this specific store
-store.use(presist())
+store.use(persist())
 ```
 
 #### Creating Custom Plugins

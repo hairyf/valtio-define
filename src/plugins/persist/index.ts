@@ -9,7 +9,7 @@ export interface PersistentMountOptions {
   automount?: boolean
 }
 
-export function presist({ automount = true }: PersistentMountOptions = {}): Plugin {
+export function persist({ automount = true }: PersistentMountOptions = {}): Plugin {
   return (context) => {
     const { persist, getters } = context.options
     const { $state } = context.store

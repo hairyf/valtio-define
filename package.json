@@ -25,7 +25,8 @@
   "exports": {
     ".": "./src/index.ts",
     "./plugins": "./src/plugins/index.ts",
-    "./plugins/presist": "./src/plugins/presist/index.ts",
+    "./plugins/persist": "./src/plugins/persist/index.ts",
+    "./plugins/persist/types": "./src/plugins/persist/types.ts",
     "./package.json": "./package.json"
   },
   "files": [
@@ -89,7 +90,8 @@
     "exports": {
       ".": "./dist/index.mjs",
       "./plugins": "./dist/plugins/index.mjs",
-      "./plugins/presist": "./dist/plugins/presist/index.mjs",
+      "./plugins/persist": "./dist/plugins/persist/index.mjs",
+      "./plugins/persist/types": "./dist/plugins/persist/types.mjs",
       "./package.json": "./package.json"
     }
   }
