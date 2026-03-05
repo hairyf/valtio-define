@@ -76,7 +76,7 @@ export interface PersistentOptions<S extends object> {
   paths?: DeepKeys<S>[]
 }
 
-declare module 'valtio-define/types' {
+declare module 'valtio-define' {
   export interface StoreDefineOptions<S extends object> {
     persist?: PersistentOptions<S> | boolean
   }
