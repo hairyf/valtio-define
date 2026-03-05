@@ -12,17 +12,20 @@
     "url": "git+https://github.com/hairyf/valtio-define.git"
   },
   "bugs": "https://github.com/hairyf/valtio-define/issues",
-  "keywords": [],
+  "keywords": [
+    "valtio",
+    "define",
+    "pinia",
+    "factory",
+    "store",
+    "react",
+    "typescript"
+  ],
   "sideEffects": false,
   "exports": {
     ".": "./src/index.ts",
-    "./define": "./src/define.ts",
-    "./plugin": "./src/plugin.ts",
     "./plugins": "./src/plugins/index.ts",
     "./plugins/presist": "./src/plugins/presist/index.ts",
-    "./types": "./src/types/index.ts",
-    "./use": "./src/use.ts",
-    "./utils": "./src/utils.ts",
     "./package.json": "./package.json"
   },
   "files": [
@@ -85,13 +88,8 @@
   "publishConfig": {
     "exports": {
       ".": "./dist/index.mjs",
-      "./define": "./dist/define.mjs",
-      "./plugin": "./dist/plugin.mjs",
       "./plugins": "./dist/plugins/index.mjs",
       "./plugins/presist": "./dist/plugins/presist/index.mjs",
-      "./types": "./dist/types/index.mjs",
-      "./use": "./dist/use.mjs",
-      "./utils": "./dist/utils.mjs",
       "./package.json": "./package.json"
     }
   }
