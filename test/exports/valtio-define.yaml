@@ -10,3 +10,4 @@
   persist: function
 ./plugins/persist:
   persist: function
+./plugins/persist/types: {}
