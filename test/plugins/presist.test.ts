@@ -1,16 +1,16 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { defineStore } from '../../src/define'
 import { plugins, use } from '../../src/plugin'
-import persistent from '../../src/plugins/persistent'
+import { presist } from '../../src/plugins/presist'
 
-describe('persistent plugin', () => {
+describe('presist plugin', () => {
   let mockStorage: Partial<Storage> & Pick<Storage, 'getItem' | 'setItem'>
 
   beforeEach(() => {
     // 清空插件数组
     plugins.length = 0
-    // 注册 persistent 插件
-    use(persistent())
+    // 注册 presist 插件
+    use(presist())
 
     mockStorage = {
       getItem: vi.fn(),
@@ -23,11 +23,11 @@ describe('persistent plugin', () => {
   })
 
   it('should be a function', () => {
-    expect(typeof persistent).toBe('function')
+    expect(typeof presist).toBe('function')
   })
 
   it('should return a plugin function', () => {
-    const plugin = persistent()
+    const plugin = presist()
     expect(typeof plugin).toBe('function')
   })
 
@@ -344,5 +344,65 @@ describe('persistent plugin', () => {
 
     expect(store.$state.count).toBe(10)
     expect(store.$state.doubled).toBe(20)
+  })
+
+  describe('automount', () => {
+    it('should mount from storage by default (automount: true)', () => {
+      mockStorage.getItem = vi.fn(() => JSON.stringify({ count: 99 }))
+
+      const store = defineStore({
+        state: { count: 0 },
+        persist: {
+          storage: mockStorage,
+          key: 'test-automount-true',
+        },
+      })
+
+      expect(mockStorage.getItem).toHaveBeenCalledWith('test-automount-true')
+      expect(store.$state.count).toBe(99)
+    })
+
+    it('should not call getItem when automount: false', () => {
+      plugins.length = 0
+      use(presist({ automount: false }))
+
+      mockStorage.getItem = vi.fn(() => JSON.stringify({ count: 99 }))
+
+      const store = defineStore({
+        state: { count: 0, name: 'initial' },
+        persist: {
+          storage: mockStorage,
+          key: 'test-automount-false',
+        },
+      })
+
+      expect(mockStorage.getItem).not.toHaveBeenCalled()
+      expect(store.$state.count).toBe(0)
+      expect(store.$state.name).toBe('initial')
+    })
+
+    it('should not persist when automount: false (isHydrated stays false)', async () => {
+      plugins.length = 0
+      use(presist({ automount: false }))
+
+      mockStorage.getItem = vi.fn(() => null)
+      mockStorage.setItem = vi.fn()
+
+      const store = defineStore({
+        state: { count: 0 },
+        persist: {
+          storage: mockStorage,
+          key: 'test-automount-false-watch',
+        },
+      })
+
+      await new Promise(resolve => setTimeout(resolve, 50))
+
+      store.$state.count = 7
+      await new Promise(resolve => setTimeout(resolve, 50))
+
+      // mount() is never called, so isHydrated stays false and watch callback returns early
+      expect(mockStorage.setItem).not.toHaveBeenCalled()
+    })
   })
 })

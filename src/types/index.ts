@@ -1,3 +1,4 @@
+/* eslint-disable unused-imports/no-unused-vars */
 import type { ReactElement } from 'react'
 
 export type Actions<S = any> = Record<string, (this: S, ...args: any) => any>
@@ -12,7 +13,11 @@ export type GettersReturnType<G extends Getters<any>> = {
   [K in keyof G]: ReturnType<G[K]>
 }
 
-export interface StoreDefine<S extends object, A extends ActionsTree, G extends Getters<any>> {
+export interface StoreDefineOptions<S> {
+
+}
+
+export interface StoreDefine<S extends object, A extends ActionsTree, G extends Getters<any>> extends StoreDefineOptions<S> {
   state: (() => S) | S
   actions?: A & ThisType<A & S & GettersReturnType<G>>
   getters?: G & ThisType<S & GettersReturnType<G>>
@@ -35,6 +40,10 @@ export interface Patch<S, G extends Getters<S>> {
   (patch: Partial<S> | ((state: S & GettersReturnType<G>) => void)): void
 }
 
+export interface StoreOptions {
+
+}
+
 export type Store<S, A extends Actions<S> = Actions<S>, G extends Getters<S> = Getters<S>> = {
   $subscribe: Subscribe<S, G>
   $subscribeKey: SubscribeKey<S, G>
@@ -44,7 +53,7 @@ export type Store<S, A extends Actions<S> = Actions<S>, G extends Getters<S> = G
   $getters: GettersReturnType<G>
   use: (plugin: Plugin) => void
   $signal: Signal<S, G>
-} & S & GettersReturnType<G> & ActionsOmitThisParameter<A>
+} & S & GettersReturnType<G> & ActionsOmitThisParameter<A> & StoreOptions
 
 export interface PluginContext<S extends object = Record<string, unknown>> {
   store: Store<S, Actions<S>, Getters<S>>

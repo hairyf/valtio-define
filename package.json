@@ -14,33 +14,17 @@
   "bugs": "https://github.com/hairyf/valtio-define/issues",
   "keywords": [],
   "sideEffects": false,
-  "publishConfig": {
-    "exports": {
-      ".": "./dist/index.mjs",
-      "./define": "./dist/define.mjs",
-      "./plugin": "./dist/plugin.mjs",
-      "./plugins": "./dist/plugins/index.mjs",
-      "./plugins/persistent": "./dist/plugins/persistent/index.mjs",
-      "./types": "./dist/types/index.mjs",
-      "./use": "./dist/use.mjs",
-      "./utils": "./dist/utils.mjs",
-      "./package.json": "./package.json"
-    },
-    "./types": "./dist/types/index.mjs",
-    "main": "./dist/index.mjs",
-    "module": "./dist/index.mjs",
-    "types": "./dist/index.d.mts",
-    "access": "public"
-  },
   "exports": {
     ".": "./src/index.ts",
-    "./package.json": "./package.json",
+    "./define": "./src/define.ts",
+    "./plugin": "./src/plugin.ts",
     "./plugins": "./src/plugins/index.ts",
-    "./plugins/persistent": "./src/plugins/persistent/index.ts",
-    "./types": "./src/types/index.ts"
+    "./plugins/presist": "./src/plugins/presist/index.ts",
+    "./types": "./src/types/index.ts",
+    "./use": "./src/use.ts",
+    "./utils": "./src/utils.ts",
+    "./package.json": "./package.json"
   },
-  "main": "./src/index.ts",
-  "module": "./src/index.ts",
   "files": [
     "dist"
   ],
@@ -97,5 +81,18 @@
   },
   "lint-staged": {
     "*": "eslint --fix"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": "./dist/index.mjs",
+      "./define": "./dist/define.mjs",
+      "./plugin": "./dist/plugin.mjs",
+      "./plugins": "./dist/plugins/index.mjs",
+      "./plugins/presist": "./dist/plugins/presist/index.mjs",
+      "./types": "./dist/types/index.mjs",
+      "./use": "./dist/use.mjs",
+      "./utils": "./dist/utils.mjs",
+      "./package.json": "./package.json"
+    }
   }
 }

@@ -3,11 +3,11 @@ import * as plugins from '../../src/plugins'
 
 describe('plugins/index', () => {
   it('should export persistent', () => {
-    expect(plugins.persistent).toBeDefined()
-    expect(typeof plugins.persistent).toBe('function')
+    expect(plugins.presist).toBeDefined()
+    expect(typeof plugins.presist).toBe('function')
   })
 
   it('should export all plugin functions', () => {
-    expect('persistent' in plugins).toBe(true)
+    expect('presist' in plugins).toBe(true)
   })
 })
