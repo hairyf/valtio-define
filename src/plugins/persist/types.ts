@@ -19,3 +19,9 @@ export interface PersistentOptions<S extends object> {
   storage?: Storage
   paths?: DeepKeys<S>[]
 }
+
+export interface PersistentStore {
+  $persist: {
+    mount: () => void
+  }
+}

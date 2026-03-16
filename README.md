@@ -124,16 +124,14 @@ const store = defineStore({
 })
 ```
 
-You can pass `automount` when registering the plugin (default `true`). When `true`, state is hydrated from storage as soon as the store is created. Set `automount: false` when you need to avoid running persistence during server-side rendering, and manually mount persist in your App entry instead:
+You can pass `hydrate` when registering the plugin (default `true`). When `true`, state is hydrated from storage as soon as the store is created. Set `hydrate: false` when you need to avoid running persistence during server-side rendering, and manually mount persist in your App entry instead:
 
 ```tsx
-// Register with automount: false
-store.use(persist({ automount: false }))
+// Register with hydrate: false
+store.use(persist({ hydrate: false }))
 
 // In your App (client entry), after store is used:
-useEffect(() => {
-  store.use(persist({ automount: false }))
-}, [])
+useEffect(() => store.$persist.mount(), [])
 ```
 
 ### Subscribe to Changes

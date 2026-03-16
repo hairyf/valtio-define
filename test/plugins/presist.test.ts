@@ -346,25 +346,25 @@ describe('persist plugin', () => {
     expect(store.$state.doubled).toBe(20)
   })
 
-  describe('automount', () => {
-    it('should mount from storage by default (automount: true)', () => {
+  describe('hydrate', () => {
+    it('should mount from storage by default (hydrate: true)', () => {
       mockStorage.getItem = vi.fn(() => JSON.stringify({ count: 99 }))
 
       const store = defineStore({
         state: { count: 0 },
         persist: {
           storage: mockStorage,
-          key: 'test-automount-true',
+          key: 'test-hydrate-true',
         },
       })
 
-      expect(mockStorage.getItem).toHaveBeenCalledWith('test-automount-true')
+      expect(mockStorage.getItem).toHaveBeenCalledWith('test-hydrate-true')
       expect(store.$state.count).toBe(99)
     })
 
-    it('should not call getItem when automount: false', () => {
+    it('should not call getItem when hydrate: false', () => {
       plugins.length = 0
-      use(persist({ automount: false }))
+      use(persist({ hydrate: false }))
 
       mockStorage.getItem = vi.fn(() => JSON.stringify({ count: 99 }))
 
@@ -372,7 +372,7 @@ describe('persist plugin', () => {
         state: { count: 0, name: 'initial' },
         persist: {
           storage: mockStorage,
-          key: 'test-automount-false',
+          key: 'test-hydrate-false',
         },
       })
 
@@ -381,9 +381,9 @@ describe('persist plugin', () => {
       expect(store.$state.name).toBe('initial')
     })
 
-    it('should not persist when automount: false (isHydrated stays false)', async () => {
+    it('should not persist when hydrate: false (isHydrated stays false)', async () => {
       plugins.length = 0
-      use(persist({ automount: false }))
+      use(persist({ hydrate: false }))
 
       mockStorage.getItem = vi.fn(() => null)
       mockStorage.setItem = vi.fn()
@@ -392,7 +392,7 @@ describe('persist plugin', () => {
         state: { count: 0 },
         persist: {
           storage: mockStorage,
-          key: 'test-automount-false-watch',
+          key: 'test-hydrate-false-watch',
         },
       })
 

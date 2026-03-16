@@ -33,6 +33,7 @@ const store = defineStore({
 function App() {
   const counter = useStore(store)
 
+  store.$persist.mount()
   return (
     <>
       <div>

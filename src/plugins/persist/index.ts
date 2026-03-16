@@ -1,15 +1,18 @@
 import type { Plugin } from '../../types'
-import type { PersistentOptions } from './types'
+import type { PersistentOptions, PersistentStore } from './types'
 import { get, set } from '@hairy/utils'
 import { destr } from 'destr'
 import { generateStructureId } from 'structure-id'
 import { subscribe } from 'valtio'
 
 export interface PersistentMountOptions {
-  automount?: boolean
+  /**
+   * Whether to automatically mount the persist plugin when the store is created
+   */
+  hydrate?: boolean
 }
 
-export function persist({ automount = true }: PersistentMountOptions = {}): Plugin {
+export function persist({ hydrate = true }: PersistentMountOptions = {}): Plugin {
   return (context) => {
     const { persist, getters } = context.options
     const { $state } = context.store
@@ -51,8 +54,8 @@ export function persist({ automount = true }: PersistentMountOptions = {}): Plug
       })
     }
 
-    context.store.persist = { mount }
-    automount && mount()
+    context.store.$persist = { mount }
+    hydrate && mount()
     watch()
   }
 }
@@ -61,7 +64,6 @@ declare module 'valtio-define' {
   export interface StoreDefineOptions<S extends object> {
     persist?: PersistentOptions<S> | boolean
   }
-  export interface StoreOptions {
-    persist: { mount: () => void }
+  export interface StoreOptions extends PersistentStore {
   }
 }
