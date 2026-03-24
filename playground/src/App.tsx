@@ -1,10 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 import valtio, { defineStore, useStore } from 'valtio-define'
 import { persist } from 'valtio-define/plugins/persist'
 
 import reactLogo from './assets/react.svg'
 import './App.css'
 import viteLogo from '/vite.svg'
-
 valtio.use(persist())
 
 const store = defineStore({
@@ -18,6 +18,9 @@ const store = defineStore({
     delay(ms: number) {
       return new Promise(resolve => setTimeout(resolve, ms))
     },
+    current() {
+      return this.count
+    },
   },
   getters: {
     doubled() {
@@ -29,6 +32,10 @@ const store = defineStore({
     paths: ['count'],
   },
 })
+
+store.$actions.current // Fix: (...args: any[]) => any
+
+
 
 function App() {
   const counter = useStore(store)

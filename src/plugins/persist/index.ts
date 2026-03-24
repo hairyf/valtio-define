@@ -8,6 +8,9 @@ import { subscribe } from 'valtio'
 export interface PersistentMountOptions {
   automount?: boolean
 }
+export interface StorePersistentOptions {
+  mount: () => void
+}
 
 export function persist({ automount = true }: PersistentMountOptions = {}): Plugin {
   return (context) => {
@@ -62,6 +65,6 @@ declare module 'valtio-define' {
     persist?: PersistentOptions<S> | boolean
   }
   export interface StoreOptions {
-    persist: { mount: () => void }
+    persist: StorePersistentOptions
   }
 }
