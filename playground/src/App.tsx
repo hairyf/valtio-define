@@ -35,8 +35,6 @@ const store = defineStore({
 
 store.$actions.current // Fix: (...args: any[]) => any
 
-
-
 function App() {
   const counter = useStore(store)
 
