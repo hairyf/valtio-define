@@ -17,7 +17,7 @@ export interface StoreDefineOptions<S> {
 
 }
 
-export interface StoreDefine<S extends object, A extends Actions<S>, G extends Getters<any>> extends StoreDefineOptions<S> {
+export interface StoreDefine<S extends object, A, G extends Getters<any>> extends StoreDefineOptions<S> {
   state: (() => S) | S
   actions?: A & ThisType<A & S>
   getters?: G & ThisType<S>

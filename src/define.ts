@@ -38,7 +38,7 @@ import { plugins } from './plugin'
  *
  * ```
  */
-export function defineStore<S extends object, A extends Actions<S>, G extends Getters<S>>(define: StoreDefine<S, A, G>): Store<S, A & Actions<S>, G> {
+export function defineStore<S extends object, A extends Actions<S>, G extends Getters<S>>(define: StoreDefine<S, A, G>): Store<S, A, G> {
   const state = typeof define.state === 'function' ? define.state() : define.state
 
   const getters: any = define.getters || {}
