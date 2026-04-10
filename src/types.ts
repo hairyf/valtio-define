@@ -1,8 +1,8 @@
 /* eslint-disable unused-imports/no-unused-vars */
 import type { ReactElement } from 'react'
 
-export type Actions<S = any> = Record<string, (this: S, ...args: any) => any>
 export type ActionsTree = Record<string, (...args: any[]) => any>
+export type Actions<S = any> = Record<string, (this: S, ...args: any) => any>
 export type Getters<S = any> = Record<string, (this: S) => any>
 
 export type ActionsOmitThisParameter<A extends Actions<any>> = {
@@ -17,10 +17,10 @@ export interface StoreDefineOptions<S> {
 
 }
 
-export interface StoreDefine<S extends object, A extends ActionsTree, G extends Getters<any>> extends StoreDefineOptions<S> {
+export interface StoreDefine<S extends object, A extends Actions<S>, G extends Getters<any>> extends StoreDefineOptions<S> {
   state: (() => S) | S
-  actions?: A & ThisType<A & S & GettersReturnType<G>>
-  getters?: G & ThisType<S & GettersReturnType<G>>
+  actions?: A & ThisType<A & S>
+  getters?: G & ThisType<S>
 }
 
 export interface Signal<S, G extends Getters<S>> {

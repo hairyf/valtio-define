@@ -11,6 +11,9 @@ export interface PersistentMountOptions {
    */
   hydrate?: boolean
 }
+export interface StorePersistentOptions {
+  mount: () => void
+}
 
 export function persist({ hydrate = true }: PersistentMountOptions = {}): Plugin {
   return (context) => {

@@ -1,6 +1,5 @@
 import type {
   Actions,
-  ActionsTree,
   Getters,
   Plugin,
   Store,
@@ -39,7 +38,7 @@ import { plugins } from './plugin'
  *
  * ```
  */
-export function defineStore<S extends object, A extends ActionsTree, G extends Getters<S>>(define: StoreDefine<S, A, G>): Store<S, A & Actions<S>, G> {
+export function defineStore<S extends object, A extends Actions<S>, G extends Getters<S>>(define: StoreDefine<S, A, G>): Store<S, A & Actions<S>, G> {
   const state = typeof define.state === 'function' ? define.state() : define.state
 
   const getters: any = define.getters || {}
@@ -56,14 +55,8 @@ export function defineStore<S extends object, A extends ActionsTree, G extends G
   }
 
   for (const key in getters) {
-    Object.defineProperty($state, key, {
-      get: () => getters[key].call($state),
-      enumerable: true,
-    })
-    Object.defineProperty($getters, key, {
-      get: () => $state[key],
-      enumerable: true,
-    })
+    defineProperty($state, key, () => getters[key].call($state))
+    defineProperty($getters, key, () => $state[key])
   }
 
   function $subscribe(listener: (state: any, opts: any) => void): () => void {
@@ -98,7 +91,7 @@ export function defineStore<S extends object, A extends ActionsTree, G extends G
     use,
   }
 
-  const store = new Proxy<any>(base as any, {
+  const store = new Proxy<any>(base, {
     get(target, prop) {
       if (prop in $actions)
         return $actions[prop as keyof typeof $actions]
@@ -111,8 +104,8 @@ export function defineStore<S extends object, A extends ActionsTree, G extends G
     },
     set(target, prop, value) {
       prop in $state
-        ? $state[prop as keyof typeof $state] = value
-        : target[prop as keyof typeof base] = value
+        ? $state[prop] = value
+        : target[prop] = value
       return true
     },
   })
@@ -132,4 +125,8 @@ export function defineStore<S extends object, A extends ActionsTree, G extends G
       apply(plugin)
   })
   return store
+}
+
+function defineProperty(target: any, prop: string | symbol, getter: () => any) {
+  Object.defineProperty(target, prop, { get: getter, enumerable: true })
 }
