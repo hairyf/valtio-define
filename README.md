@@ -7,7 +7,7 @@
 [![coverage][coverage-src]][coverage-href]
 [![License][license-src]][license-href].
 
-⚡️ **valtio-define** is a lightweight factory for creating fully functional, robust [Valtio](https://valtio.dev) stores. It simplifies state management in React by providing a structured API for state, actions, and computed getters.
+⚡️ **valtio-define** is a lightweight factory for creating fully functional, robust [Valtio](https://github.com/pmndrs/valtio) stores. It simplifies state management in React by providing a structured API for state, actions, and computed getters.
 
 ## 📦 Installation
 
