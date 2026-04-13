@@ -17,10 +17,14 @@ export interface StoreDefineOptions<S> {
 
 }
 
-export interface StoreDefine<S extends object, A, G extends Getters<any>> extends StoreDefineOptions<S> {
+export interface StoreDefine<
+  S extends object,
+  A extends object,
+  G extends Getters<any>,
+> extends StoreDefineOptions<S> {
   state: (() => S) | S
-  actions?: A & ThisType<A & S>
-  getters?: G & ThisType<S>
+  actions?: A & ThisType<A & S & GettersReturnType<G>>
+  getters?: G & ThisType<S & GettersReturnType<G>>
 }
 
 export interface Signal<S, G extends Getters<S>> {

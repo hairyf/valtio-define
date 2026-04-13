@@ -19,12 +19,17 @@ const store = defineStore({
       return new Promise(resolve => setTimeout(resolve, ms))
     },
     current() {
-      return this.count
+      return this.doublePlusOne
     },
   },
   getters: {
     doubled() {
       return this.count * 2
+    },
+    // the return type **must** be explicitly set
+    doublePlusOne() {
+      // autocompletion and typings for the whole store ✨
+      return this.doubled + 1
     },
   },
   persist: {
@@ -33,8 +38,8 @@ const store = defineStore({
   },
 })
 
+store.doublePlusOne
 // store.a // Fix:Not define getters this cont is Any
-
 store.$actions.current // Fix: (...args: any[]) => any
 
 function App() {
