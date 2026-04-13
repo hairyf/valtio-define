@@ -1,4 +1,4 @@
-# valtio-define
+![image](https://github.com/pmndrs/valtio/raw/main/logo.svg)
 
 [![npm version][npm-version-src]][npm-version-href]
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
@@ -6,8 +6,6 @@
 [![JSDocs][jsdocs-src]][jsdocs-href]
 [![coverage][coverage-src]][coverage-href]
 [![License][license-src]][license-href].
-
-![image](https://github.com/pmndrs/valtio/raw/main/logo.svg)
 
 ⚡️ **valtio-define** is a lightweight factory for creating fully functional, robust [Valtio](https://valtio.dev) stores. It simplifies state management in React by providing a structured API for state, actions, and computed getters.
 
