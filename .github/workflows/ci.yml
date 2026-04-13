@@ -50,6 +50,8 @@ jobs:
       - run: pnpm i -g @antfu/ni
       - run: nci
 
+      - run: pnpm exec playwright install
+
       - run: nr coverage
 
       - name: Upload coverage reports to Codecov
