@@ -5,21 +5,23 @@
 [![bundle][bundle-src]][bundle-href]
 [![JSDocs][jsdocs-src]][jsdocs-href]
 [![coverage][coverage-src]][coverage-href]
-[![License][license-src]][license-href]
+[![License][license-src]][license-href].
 
-⚡ Quickly create a fully functional and robust [Valtio](https://valtio.dev) factory
+![image](https://github.com/pmndrs/valtio/raw/main/logo.svg)
 
-## Installation
+⚡️ **valtio-define** is a lightweight factory for creating fully functional, robust [Valtio](https://valtio.dev) stores. It simplifies state management in React by providing a structured API for state, actions, and computed getters.
+
+## 📦 Installation
 
 ```bash
 pnpm add valtio-define
 ```
 
-## Usage
+## 🚀 Quick Start
 
 ### Basic Store
 
-Create a reactive store with state and actions. The store provides a simple and intuitive API for managing state in React applications, built on top of Valtio.
+`defineStore` allows you to encapsulate state and logic in one place. Use `useStore` to consume the reactive state in your components.
 
 ```tsx
 import { defineStore, useStore } from 'valtio-define'
@@ -28,6 +30,7 @@ const store = defineStore({
   state: () => ({ count: 0 }),
   actions: {
     increment() {
+      // 'this' refers to the reactive state
       this.count++
     },
   },
@@ -35,18 +38,22 @@ const store = defineStore({
 
 function Counter() {
   const { count } = useStore(store)
+
   return (
     <div>
+      <div>
+        Count:
+        {count}
+      </div>
       <button onClick={store.increment}>Increment</button>
-      <div>{count}</div>
     </div>
   )
 }
 ```
 
-### With Getters
+### Derived State (Getters)
 
-Getters are computed properties that automatically update when their dependencies change. They provide a clean way to derive state without manually tracking dependencies.
+Getters are **computed properties**. They automatically re-evaluate when their dependencies change, providing a clean way to derive data.
 
 ```tsx
 const store = defineStore({
@@ -62,314 +69,145 @@ const store = defineStore({
     },
   },
 })
+```
 
-function Counter() {
-  const state = useStore(store)
-  return (
-    <div>
-      <div>
-        Count:
-        {state.count}
-      </div>
-      <div>
-        Doubled:
-        {state.doubled}
-      </div>
-      <button onClick={store.increment}>Increment</button>
-    </div>
-  )
-}
+-----
+
+## 🛠 Advanced Features
+
+### The Power of `this`
+
+Inside `actions` and `getters`, `this` provides full access to the store's state, other actions, and other getters. This type safety across the entire store.
+
+```tsx
+const store = defineStore({
+  state: () => ({
+    count: 0,
+  }),
+  actions: {
+    // Autocompletion and typings for the whole store ✨
+    currentDoubledOne() {
+      return this.doublePlusOne
+    },
+  },
+  getters: {
+    doubled() {
+      return this.count * 2
+    },
+    // Note: The return type **must** be explicitly set for complex getters
+    doublePlusOne() {
+      // Access other getters via 'this'
+      return this.doubled + 1
+    },
+  },
+})
 ```
 
 ### Persistence
 
-The persistence plugin allows you to persist store state to storage (e.g., localStorage).
+Save and restore your store state using the `persist` plugin.
 
-First, register the persist plugin:
+1.  **Global Registration:**
 
-```tsx
-import valtio from 'valtio-define'
-import { persist } from 'valtio-define/plugins'
+    ```tsx
+    import valtio from 'valtio-define'
+    import { persist } from 'valtio-define/plugins'
 
-// Register the persist plugin globally
-valtio.use(persist())
-```
+    valtio.use(persist())
+    ```
 
-Then use it in your store:
+2.  **Store Configuration:**
 
-```tsx
-import { defineStore } from 'valtio-define'
+    ```tsx
+    const store = defineStore({
+      state: () => ({ count: 0 }),
+      persist: {
+        key: 'my-app-storage',
+        storage: localStorage,
+        paths: ['count'], // Optional: Persist specific keys only
+      },
+    })
+    ```
 
-const store = defineStore({
-  state: () => ({ count: 0 }),
-  actions: {
-    increment() {
-      this.count++
-    },
-  },
-  persist: {
-    key: 'my-store',
-    storage: localStorage,
-    paths: ['count'], // Only persist 'count', or omit to persist all state
-  },
-})
-```
+    > **Tip:** If you set `persist: true`, a unique key is automatically generated using `structure-id`.
 
-If `persist` is `true`, it will use `structure-id` to generate a unique key for the store automatically.
+### Manual Hydration (SSR Friendly)
+
+To avoid hydration mismatches during Server-Side Rendering, disable automatic hydration and mount it in a `useEffect`.
 
 ```tsx
-const store = defineStore({
-  state: () => ({ count: 0 }),
-  persist: true, // Auto-generates key using structure-id
-})
-```
-
-You can pass `hydrate` when registering the plugin (default `true`). When `true`, state is hydrated from storage as soon as the store is created. Set `hydrate: false` when you need to avoid running persistence during server-side rendering, and manually mount persist in your App entry instead:
-
-```tsx
-// Register with hydrate: false
+// Register with hydrate disabled
 store.use(persist({ hydrate: false }))
 
-// In your App (client entry), after store is used:
-useEffect(() => store.$persist.mount(), [])
+// In your Client Entry / App Root
+useEffect(() => {
+  store.$persist.mount()
+}, [])
 ```
 
-### Subscribe to Changes
+### React-Idiomatic State Hooks
+
+If you prefer the `useState` syntax, use `storeToState` or `storeToStates`. These return `[state, setter]` tuples.
 
 ```tsx
-const store = defineStore({
-  state: () => ({ count: 0 }),
-  actions: {
-    increment() {
-      this.count++
-    },
-  },
-})
-
-// Subscribe to state changes
-const unsubscribe = store.$subscribe((state) => {
-  console.log('State changed:', state)
-})
-
-// Subscribe to specific key changes
-const unsubscribeKey = store.$subscribeKey('count', (value) => {
-  console.log('Count changed:', value)
-})
-```
-
-### Patch State
-
-```tsx
-// Patch with object
-store.$patch({ count: 10 })
-
-// Patch with function
-store.$patch((state) => {
-  state.count += 5
-})
-```
-
-### Signal (JSX Component)
-
-```tsx
-function App() {
-  return (
-    <div>
-      Count:
-      {' '}
-      {store.$signal(state => state.count)}
-    </div>
-  )
-}
-```
-
-### Store to State Hooks
-
-Convert store state to React hooks similar to `useState`. This provides a more React-idiomatic way to access and update store state.
-
-#### `storeToState(store, key)`
-
-Returns a tuple `[state, setter]` for a single store key, similar to React's `useState`.
-
-```tsx
-import { defineStore, storeToState } from 'valtio-define'
-
-const store = defineStore({
-  state: { count: 0, name: 'test' },
-})
-
-function Counter() {
-  const [count, setCount] = storeToState(store, 'count')
+function Profile() {
+  // Access a single key
   const [name, setName] = storeToState(store, 'name')
 
-  return (
-    <div>
-      <button onClick={() => setCount(count + 1)}>Increment</button>
-      <button onClick={() => setCount(prev => prev + 1)}>Increment (functional)</button>
-      <div>
-        Count:
-        {count}
-      </div>
-      <div>
-        Name:
-        {name}
-      </div>
-    </div>
-  )
-}
-```
-
-**Parameters:**
-- `store`: Store instance created by `defineStore`
-- `key`: Key of the state property to access
-
-**Returns:** `[state, setter]` tuple where:
-- `state`: Current value of the state property
-- `setter`: Function to update the state (accepts value or updater function)
-
-#### `storeToStates(store)`
-
-Returns an object with all store keys mapped to `[state, setter]` tuples.
-
-```tsx
-function Component() {
+  // Access all keys as hooks
   const {
-    count: [count, setCount],
-    name: [name, setName],
-    user: [user, setUser],
+    count: [count, setCount]
   } = storeToStates(store)
 
-  return (
-    <div>
-      <button onClick={() => setCount(count + 1)}>Increment</button>
-      <div>
-        Count:
-        {count}
-      </div>
-      <div>
-        Name:
-        {name}
-      </div>
-      <div>
-        User:
-        {user.name}
-      </div>
-    </div>
-  )
+  return <input value={name} onChange={e => setName(e.target.value)} />
 }
 ```
 
-**Parameters:**
-- `store`: Store instance created by `defineStore`
+-----
 
-**Returns:** Object where each key maps to a `[state, setter]` tuple
+## 🛰 Store API
 
-## API
+Every store instance created with `defineStore` includes built-in utility methods:
 
-### `defineStore(store)`
+  * **`$patch(obj | fn)`**: Bulk update the state.
+  * **`$subscribe(callback)`**: Watch the entire store for changes.
+  * **`$subscribeKey(key, callback)`**: Watch a specific property.
+  * **`$signal(selector)`**: Use a selector function inside JSX for fine-grained reactivity.
 
-Creates a store with state, actions, and getters.
+-----
 
-**Parameters:**
-- `store.state`: Initial state object or factory function
-- `store.actions`: Object containing action methods
-- `store.getters`: Object containing getter methods
-- `store.persist`: Persistence plugin configuration (boolean or object) - see [Persistence Plugin](#persistence)
+## 🔌 Plugins
 
-**Returns:** Store instance with reactive state and actions
+### Global vs. Per-Store
 
-### `useStore(store)`
-
-React hook that returns a snapshot of the store state.
-
-**Parameters:**
-- `store`: Store instance created by `defineStore`
-
-**Returns:** Snapshot of the store state
-
-### `storeToState(store, key)`
-
-React hook that returns a `[state, setter]` tuple for a single store key, similar to React's `useState`.
-
-**Parameters:**
-- `store`: Store instance created by `defineStore`
-- `key`: Key of the state property to access
-
-**Returns:** `[state, setter]` tuple where:
-- `state`: Current value of the state property
-- `setter`: Function to update the state (accepts value or updater function like `setState(value)` or `setState(prev => newValue)`)
-
-### `storeToStates(store)`
-
-React hook that returns an object with all store keys mapped to `[state, setter]` tuples.
-
-**Parameters:**
-- `store`: Store instance created by `defineStore`
-
-**Returns:** Object where each key maps to a `[state, setter]` tuple, preserving the correct type for each property
-
-### Plugins
-
-Plugins allow you to extend store functionality. You can use plugins globally or per-store.
-
-#### Global Plugin Registration
+Plugins can be applied to all stores or restricted to a single instance.
 
 ```tsx
-import valtio from 'valtio-define'
-import { persist } from 'valtio-define/plugins'
+// Global
+valtio.use(myPlugin())
 
-// Register plugin globally - applies to all stores
-valtio.use(persist())
+// Local
+const store = defineStore({ /* ... */ })
+store.use(myPlugin())
 ```
 
-#### Per-Store Plugin Registration
+### Creating a Custom Plugin
 
-```tsx
-import { defineStore } from 'valtio-define'
-import { persist } from 'valtio-define/plugins'
-
-const store = defineStore({
-  state: () => ({ count: 0 }),
-})
-
-// Register plugin for this specific store
-store.use(persist())
-```
-
-#### Creating Custom Plugins
+Extend functionality by accessing the `store` instance and `options` through the plugin context.
 
 ```tsx
 import type { Plugin } from 'valtio-define'
 
-function myPlugin() {
-  ({ store, options }: PluginContext) => {
-    // Access store methods
+function loggerPlugin(): Plugin {
+  return ({ store, options }) => {
     store.$subscribe((state) => {
-      console.log('State changed:', state)
+      console.log('Update:', state)
     })
-
-    // Access store options
-    if (options.someOption) {
-    // Do something
-    }
   }
 }
-
-declare module 'valtio-define' {
-  export interface StoreDefine<S extends object, A extends ActionsTree, G extends Getters<any>> {
-    myPlugin?: {
-      someOption?: boolean
-    }
-  }
-}
-
-// Use the plugin
-use(myPlugin())
 ```
 
-**Plugin Context:**
-- `context.store`: The store instance with all methods (`$state`, `$patch`, `$subscribe`, etc.)
-- `context.options`: The original store definition options
+-----
 
 ## License
 
