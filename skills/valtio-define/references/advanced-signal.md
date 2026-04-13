@@ -35,7 +35,7 @@ function App() {
 * **Inline Reactivity**: Renders reactive values directly in JSX
 * **Automatic Updates**: Component re-renders when accessed state changes
 * **Access to State and Getters**: Function receives full state including getters
-* **No Hook Required**: Can be used outside of React components (though typically used inside)
+* **No Hook Required**: Can be used inline in JSX without calling `useStore` in the same component
 
 ## When to Use
 

@@ -12,7 +12,13 @@ Type definitions for store creation and usage.
 Configuration object passed to `defineStore`:
 
 ```tsx
-interface StoreDefine<S extends object, A extends ActionsTree, G extends Getters<any>> {
+interface StoreDefineOptions<S extends object> {}
+
+interface StoreDefine<
+  S extends object,
+  A extends object,
+  G extends Getters<any>,
+> extends StoreDefineOptions<S> {
   state: (() => S) | S
   actions?: A & ThisType<A & S & GettersReturnType<G>>
   getters?: G & ThisType<S & GettersReturnType<G>>
@@ -61,16 +67,18 @@ type Getters<S = any> = Record<string, (this: S) => any>
 
 ## Type Extension for Plugins
 
-Plugins can extend `StoreDefine` via module augmentation:
+Plugins should extend `StoreDefineOptions` and/or `StoreOptions` via module augmentation:
 
 ```tsx
 declare module 'valtio-define' {
-  export interface StoreDefine<S extends object, A extends ActionsTree, G extends Getters<any>> {
-    myPlugin?: {
-      someOption?: boolean
-    }
+  export interface StoreDefineOptions<S extends object> {
+    myPlugin?: { someOption?: boolean }
+  }
+
+  export interface StoreOptions {
+    $myPlugin?: { mounted: boolean }
   }
 }
 ```
 
-This allows plugins to add typed options to the store definition.
+This allows plugins to add typed options to the store definition and/or add new fields to the store instance.

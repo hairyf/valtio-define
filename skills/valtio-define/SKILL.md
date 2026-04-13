@@ -3,11 +3,11 @@ name: valtio-define
 description: Comprehensive skills for working with valtio-define
 metadata:
   author: Hairyf
-  version: "2025.01.29"
+  version: "2026.04.13"
   source: Internal Documentation
 ---
 
-> Based on valtio-define v1.0.1. A Valtio-based state management library with Pinia-like API for React applications.
+> Based on valtio-define v1.2.0. A Valtio-based state management library with a Pinia-like API for React applications.
 
 ## Overview
 
@@ -35,7 +35,7 @@ valtio-define provides a factory function for creating reactive stores with stat
 | Topic | Description | Reference |
 |-------|-------------|-----------|
 | Plugin System | Extend stores with plugins | [feature-plugin-system](references/feature-plugin-system.md) |
-| Persistent Plugin | Persist state to storage | [feature-persistent-plugin](references/feature-persistent-plugin.md) |
+| Persist Plugin | Persist state to storage | [feature-plugin-persist](references/feature-plugin-persist.md) |
 
 ## Quick Start
 

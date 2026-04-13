@@ -53,7 +53,7 @@ const store = defineStore({
 
 ```tsx
 interface PersistentOptions<S extends object> {
-  key?: string           // Storage key (required if persist is object)
+  key?: string           // Storage key (auto-generated if omitted)
   storage?: Storage       // Storage implementation (defaults to localStorage)
   paths?: DeepKeys<S>[]   // Specific paths to persist (defaults to all)
 }
@@ -128,6 +128,20 @@ interface Storage {
 * **Auto-Save**: State changes are automatically saved to storage
 * **Selective Updates**: Only specified paths (if configured) are saved
 * **Async Support**: Handles async storage operations gracefully
+
+## Manual Hydration (SSR Friendly)
+
+To avoid hydration mismatches during Server-Side Rendering, disable automatic hydration and mount it in a `useEffect`:
+
+```tsx
+import { persist } from 'valtio-define/plugins'
+
+store.use(persist({ hydrate: false }))
+
+useEffect(() => {
+  store.$persist.mount()
+}, [])
+```
 
 ## Common Patterns
 

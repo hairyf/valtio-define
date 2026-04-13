@@ -7,6 +7,12 @@ description: React hook for accessing store state in components
 
 React hook that returns a reactive snapshot of the store state. Automatically re-renders components when accessed state changes.
 
+`useStore` is a thin wrapper around Valtio's `useSnapshot`, but it returns a snapshot that includes:
+
+* State
+* Getters
+* Actions (as stable function references)
+
 ## Usage
 
 ```tsx
@@ -29,7 +35,7 @@ function Counter() {
     <div>
       <div>Count: {state.count}</div>
       <div>Doubled: {state.doubled}</div>
-      <button onClick={store.increment}>Increment</button>
+      <button onClick={() => state.increment()}>Increment</button>
     </div>
   )
 }
@@ -40,31 +46,27 @@ function Counter() {
 * **Reactive**: Component automatically re-renders when accessed state properties change.
 * **Snapshot**: Returns a snapshot (read-only) of the state. Use actions or `$patch` to modify state.
 * **Getters Included**: Getters are automatically included in the returned snapshot.
-* **Actions Not Included**: Actions are not included in the snapshot - access them directly from the store instance.
+* **Actions Included**: Actions are included in the snapshot (and are safe to call).
 
-## Accessing Actions
+## Options
 
-Actions must be accessed from the store instance, not from the snapshot:
+`useStore(store, options)` accepts the same options as Valtio's `useSnapshot`:
 
 ```tsx
-function Component() {
-  const state = useStore(store)
-  
-  // ✅ Correct - access action from store
-  <button onClick={store.increment}>Increment</button>
-  
-  // ❌ Wrong - actions not in snapshot
-  // <button onClick={state.increment}>Increment</button>
-}
+const state = useStore(store, { sync: true })
 ```
 
-## Type Inference
-
-The hook properly infers types including state, getters, and actions:
+`sync: true` is useful for controlled inputs that may lose caret position due to batched updates (see Valtio issue: https://github.com/pmndrs/valtio/issues/270):
 
 ```tsx
-const state = useStore(store)
-// state.count: number
-// state.doubled: number
-// state.increment: undefined (actions not in snapshot)
+function Input() {
+  const state = useStore(store, { sync: true })
+
+  return (
+    <input
+      value={state.text}
+      onChange={e => store.text = e.target.value}
+    />
+  )
+}
 ```

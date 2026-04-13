@@ -38,6 +38,7 @@ function Counter() {
 * Setter accepts value or updater function: `setCount(5)` or `setCount(prev => prev + 1)`
 * Component re-renders when the specific key changes
 * Type-safe with proper inference
+* Accepts an optional third argument: `storeToState(store, key, { sync?: boolean })`
 
 ## storeToStates
 
@@ -69,6 +70,20 @@ function Component() {
 * Each property gets its own `[value, setter]` tuple
 * Useful when accessing multiple store properties
 * Preserves correct types for each property
+* Accepts an optional second argument: `storeToStates(store, { sync?: boolean })`
+
+## Controlled Inputs and `sync: true`
+
+Controlled inputs may lose caret position due to batched updates (see Valtio issue: https://github.com/pmndrs/valtio/issues/270).
+
+Use `{ sync: true }` for synchronous updates:
+
+```tsx
+function Input() {
+  const [text, setText] = storeToState(store, 'text', { sync: true })
+  return <input value={text} onChange={e => setText(e.target.value)} />
+}
+```
 
 ## When to Use
 

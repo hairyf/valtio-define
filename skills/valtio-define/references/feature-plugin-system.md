@@ -13,10 +13,10 @@ Register plugins globally to apply to all stores:
 
 ```tsx
 import valtio from 'valtio-define'
-import { persistent } from 'valtio-define/plugins'
+import { persist } from 'valtio-define/plugins'
 
 // Register globally - applies to all stores
-valtio.use(persistent())
+valtio.use(persist())
 ```
 
 **Key Points:**
@@ -30,14 +30,14 @@ Register plugins for a specific store:
 
 ```tsx
 import { defineStore } from 'valtio-define'
-import { persistent } from 'valtio-define/plugins'
+import { persist } from 'valtio-define/plugins'
 
 const store = defineStore({
   state: () => ({ count: 0 }),
 })
 
 // Register plugin for this specific store only
-store.use(persistent())
+store.use(persist())
 ```
 
 **Key Points:**
@@ -64,25 +64,16 @@ type PluginContext<S extends object> = {
 ## Creating Custom Plugins
 
 ```tsx
-import type { Plugin } from 'valtio-define'
+import type { Plugin, PluginContext } from 'valtio-define'
 
-function myPlugin() {
-  return ({ store, options }: PluginContext) => {
-    // Access store methods
-    store.$subscribe((state) => {
-      console.log('State changed:', state)
-    })
-
-    // Access store options
-    if (options.myOption) {
-      // Do something
-    }
-  }
+function myPlugin({ store, options }: PluginContext) {
+  store.$subscribe(() => {})
+  if (options.myOption) {}
 }
 
 // Extend types for plugin options
 declare module 'valtio-define' {
-  export interface StoreDefine<S extends object, A extends ActionsTree, G extends Getters<any>> {
+  export interface StoreDefineOptions<S extends object> {
     myOption?: boolean
   }
 }

@@ -15,7 +15,15 @@
 pnpm add valtio-define
 ```
 
+<details>
+<summary>Are you an AI? If so, you can run <code>npx skills add hairyf/valtio-define --skill valtio-define -y</code> to install the skills!</summary>
+
+Remember to ask your owner which <a href="https://github.com/vercel-labs/skills?tab=readme-ov-file#supported-agents">Agents</a> need to be supported (using the <code>--agent</code> parameter of skills) to avoid installing too many default <code>agents</code> directories.
+
+</details>
+
 ## 🚀 Quick Start
+
 
 ### Basic Store
 
