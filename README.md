@@ -161,6 +161,28 @@ function Profile() {
 }
 ```
 
+### Controlled inputs may lose caret position
+
+Ref: https://github.com/pmndrs/valtio/issues/270
+
+This happens because Valtio batches state updates causing React to re-render after the input event. React resets the DOM value and loses the caret position.
+
+Use `{ sync: true }` to update synchronously and preserve the caret:
+
+```tsx
+function Input() {
+  const { text } = useStore(store, { sync: true })
+  // const [text, setText] = storeToState(store, 'text', { sync: true })
+
+  return (
+    <input
+      onChange={e => store.text = e.target.value}
+      value={text}
+    />
+  )
+}
+```
+
 -----
 
 ## 🛰 Store API
