@@ -20,8 +20,16 @@ export interface PersistentOptions<S extends object> {
   paths?: DeepKeys<S>[]
 }
 
+export interface PersistentMeta {
+  mounted: boolean
+  hydrated: boolean
+  unsubscribe?: () => void
+}
+
 export interface PersistentStore {
   $persist: {
     mount: () => void
+    unmount: () => void
+    meta: PersistentMeta
   }
 }

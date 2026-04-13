@@ -416,4 +416,33 @@ describe('persist plugin', () => {
       expect(mockStorage.setItem).toHaveBeenCalled()
     })
   })
+
+  it('should be idempotent across repeated plugin registrations (HMR-like)', async () => {
+    mockStorage.getItem = vi.fn(() => null)
+    mockStorage.setItem = vi.fn()
+
+    use(persist())
+    const store = defineStore({
+      state: { count: 0 },
+      persist: {
+        storage: mockStorage,
+        key: 'test-hmr',
+      },
+    })
+
+    await new Promise(resolve => setTimeout(resolve, 10))
+
+    store.$state.count = 1
+    await new Promise(resolve => setTimeout(resolve, 10))
+    expect(mockStorage.setItem).toHaveBeenCalledTimes(1)
+    expect(mockStorage.getItem).toHaveBeenCalledTimes(1)
+
+    use(persist())
+    await new Promise(resolve => setTimeout(resolve, 10))
+
+    store.$state.count = 2
+    await new Promise(resolve => setTimeout(resolve, 10))
+    expect(mockStorage.setItem).toHaveBeenCalledTimes(2)
+    expect(mockStorage.getItem).toHaveBeenCalledTimes(1)
+  })
 })

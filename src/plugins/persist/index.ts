@@ -1,5 +1,5 @@
 import type { Plugin } from '../../types'
-import type { PersistentOptions, PersistentStore } from './types'
+import type { PersistentMeta, PersistentOptions, PersistentStore } from './types'
 import { get, set } from '@hairy/utils'
 import { destr } from 'destr'
 import { generateStructureId } from 'structure-id'
@@ -11,14 +11,13 @@ export interface PersistentMountOptions {
    */
   hydrate?: boolean
 }
-export interface StorePersistentOptions {
-  mount: () => void
-}
 
 export function persist({ hydrate = true }: PersistentMountOptions = {}): Plugin {
   return (context) => {
     const { persist, getters } = context.options
     const { $state } = context.store
+
+    context.store.$persist?.unmount?.()
 
     if (!persist)
       return
@@ -30,7 +29,7 @@ export function persist({ hydrate = true }: PersistentMountOptions = {}): Plugin
     if (!storage?.getItem || !storage?.setItem)
       return
 
-    let hydrated = false
+    const meta: PersistentMeta = context.store.$persist?.meta ?? { mounted: false, hydrated: false }
 
     function initialize(value: any) {
       const data = destr<Record<string, any>>(value)
@@ -38,17 +37,24 @@ export function persist({ hydrate = true }: PersistentMountOptions = {}): Plugin
         Object.keys(getters || {}).forEach(k => Reflect.deleteProperty(data, k))
         Object.assign($state, data)
       }
-      hydrated = true
+      meta.hydrated = true
     }
 
     function mount() {
+      meta.mounted = true
       const value = storage!.getItem(key)
       value instanceof Promise ? value.then(initialize) : initialize(value)
     }
 
+    function unmount() {
+      meta.unsubscribe?.()
+      meta.unsubscribe = undefined
+    }
+
     function watch() {
-      subscribe($state, () => {
-        if (!hydrated)
+      unmount()
+      meta.unsubscribe = subscribe($state, () => {
+        if (!meta.hydrated)
           return
         const paths = options.paths || Object.keys($state)
         // 使用 reduce 替代 for 循环，更加函数式和紧凑
@@ -57,8 +63,8 @@ export function persist({ hydrate = true }: PersistentMountOptions = {}): Plugin
       })
     }
 
-    context.store.$persist = { mount }
-    hydrate && mount()
+    context.store.$persist = { mount, unmount, meta }
+    hydrate && !meta.mounted && mount()
     watch()
   }
 }
