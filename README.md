@@ -203,6 +203,14 @@ function loggerPlugin(): Plugin {
     })
   }
 }
+
+declare module 'valtio-define' {
+  export interface StoreDefineOptions<S extends object> {
+    $myPlugin?: {
+      someOption?: boolean
+    }
+  }
+}
 ```
 
 -----
