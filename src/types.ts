@@ -44,7 +44,7 @@ export interface StoreOptions {
 
 }
 
-export type Store<S, A extends Actions<S> = Actions<S>, G extends Getters<S> = Getters<S>> = {
+export type Store<S, A extends Actions<S>, G extends Getters<S>> = {
   $subscribe: Subscribe<S, G>
   $subscribeKey: SubscribeKey<S, G>
   $patch: Patch<S, G>

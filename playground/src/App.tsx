@@ -33,6 +33,8 @@ const store = defineStore({
   },
 })
 
+// store.a // Fix:Not define getters this cont is Any
+
 store.$actions.current // Fix: (...args: any[]) => any
 
 function App() {

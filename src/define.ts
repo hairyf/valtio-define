@@ -1,3 +1,4 @@
+/* eslint-disable ts/no-empty-object-type */
 import type {
   Actions,
   Getters,
@@ -38,7 +39,11 @@ import { plugins } from './plugin'
  *
  * ```
  */
-export function defineStore<S extends object, A extends Actions<S>, G extends Getters<S>>(define: StoreDefine<S, A, G>): Store<S, A, G> {
+export function defineStore<
+  S extends object = {},
+  A extends Actions<S> = {},
+  G extends Getters<S> = {},
+>(define: StoreDefine<S, A, G>): Store<S, A, G> {
   const state = typeof define.state === 'function' ? define.state() : define.state
 
   const getters: any = define.getters || {}
