@@ -1,3 +1,4 @@
+/* eslint-disable ts/no-empty-object-type */
 /* eslint-disable unused-imports/no-unused-vars */
 import type { ReactElement } from 'react'
 
@@ -48,7 +49,7 @@ export interface StoreOptions {
 
 }
 
-export type Store<S, A extends Actions<S>, G extends Getters<S>> = {
+export type Store<S, A extends Actions<S> = {}, G extends Getters<S> = {}> = {
   $subscribe: Subscribe<S, G>
   $subscribeKey: SubscribeKey<S, G>
   $patch: Patch<S, G>

@@ -500,8 +500,10 @@ describe('defineStore', () => {
         state: { count: 0 },
       })
 
-      store.$customProperty = 'test'
-      expect(store.$customProperty).toBe('test')
+      // @ts-expect-error skip error
+      store.customProperty = 'test'
+      // @ts-expect-error skip error
+      expect(store.customProperty).toBe('test')
     })
   })
 
