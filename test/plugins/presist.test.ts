@@ -31,6 +31,19 @@ describe('persist plugin', () => {
     expect(typeof plugin).toBe('function')
   })
 
+  it('should return early when persist option is not provided', () => {
+    mockStorage.getItem = vi.fn()
+    mockStorage.setItem = vi.fn()
+
+    const store = defineStore({
+      state: { count: 0 },
+    })
+
+    expect((store as any).$persist).toBeUndefined()
+    expect(mockStorage.getItem).not.toHaveBeenCalled()
+    expect(mockStorage.setItem).not.toHaveBeenCalled()
+  })
+
   it('should initialize state from storage', () => {
     mockStorage.getItem = vi.fn(() => JSON.stringify({ count: 42, name: 'saved' }))
 
@@ -73,6 +86,22 @@ describe('persist plugin', () => {
 
     expect(mockStorage.getItem).toHaveBeenCalled()
     expect(store.$state.count).toBe(5)
+
+    globalThis.localStorage = originalLocalStorage
+  })
+
+  it('should support persist: true', () => {
+    const originalLocalStorage = globalThis.localStorage
+    globalThis.localStorage = mockStorage as Storage
+    mockStorage.getItem = vi.fn(() => JSON.stringify({ count: 6 }))
+
+    const store = defineStore({
+      state: { count: 0 },
+      persist: true,
+    })
+
+    expect(mockStorage.getItem).toHaveBeenCalledTimes(1)
+    expect(store.$state.count).toBe(6)
 
     globalThis.localStorage = originalLocalStorage
   })
