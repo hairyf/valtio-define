@@ -5,12 +5,12 @@ import { persist } from 'valtio-define/plugins/persist'
 import reactLogo from './assets/react.svg'
 import './App.css'
 import viteLogo from '/vite.svg'
+
 valtio.use(persist())
 
 const store = defineStore({
   state: () => ({
     count: 0,
-    a: 1
   }),
   actions: {
     increment() {
@@ -36,7 +36,6 @@ const store = defineStore({
   persist: {
     key: 'counter',
   },
-
 })
 
 store.doublePlusOne
@@ -47,6 +46,7 @@ function App() {
   const counter = useStore(store)
 
   store.$persist.mount()
+
   return (
     <>
       <div>

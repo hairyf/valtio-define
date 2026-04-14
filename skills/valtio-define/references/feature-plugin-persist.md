@@ -13,7 +13,7 @@ First, register the plugin globally:
 
 ```tsx
 import valtio from 'valtio-define'
-import { persist } from 'valtio-define/plugins'
+import { persist } from 'valtio-define/plugins/persist'
 
 valtio.use(persist())
 ```
@@ -134,7 +134,7 @@ interface Storage {
 To avoid hydration mismatches during Server-Side Rendering, disable automatic hydration and mount it in a `useEffect`:
 
 ```tsx
-import { persist } from 'valtio-define/plugins'
+import { persist } from 'valtio-define/plugins/persist'
 
 store.use(persist({ hydrate: false }))
 

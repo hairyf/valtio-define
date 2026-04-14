@@ -119,7 +119,7 @@ Save and restore your store state using the `persist` plugin.
 
     ```tsx
     import valtio from 'valtio-define'
-    import { persist } from 'valtio-define/plugins'
+    import { persist } from 'valtio-define/plugins/persist'
 
     valtio.use(persist())
     ```
