@@ -12,7 +12,7 @@
 ## 📦 Installation
 
 ```bash
-pnpm add valtio-define
+pnpm add valtio valtio-define
 ```
 
 <details>
@@ -191,6 +191,17 @@ function Input() {
     />
   )
 }
+```
+
+## Setup Browser Devtools
+
+You can use [Redux DevTools Extension](https://github.com/reduxjs/redux-devtools) for plain objects and arrays.
+
+```ts
+import { devtools } from 'valtio/utils'
+
+const store = defineStore({/* ... */})
+const unsub = devtools(store.$state, { name: 'store name', enabled: true })
 ```
 
 -----

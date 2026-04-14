@@ -1,0 +1,154 @@
+<svg fill="none" viewBox="0 0 800 400" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg"
+  style="height: auto">
+  <foreignObject width="100%" height="100%">
+    <div xmlns="http://www.w3.org/1999/xhtml">
+      <style>
+        @keyframes float {
+        0% {
+        transform: translate3d(0,0px,0);
+        }
+        100% {
+        transform: translate3d(0,-20px,0);
+        }
+        }
+
+        @keyframes float-mid {
+        0% {
+        transform: translate3d(0,0px,0);
+        }
+        100% {
+        transform: translate3d(0,-40px,0);
+        }
+        }
+
+        @keyframes float-rotate-mid {
+        0% {
+        transform: translate3d(0,-50px,0) rotate(0deg);
+        }
+        100% {
+        transform: translate3d(0,0px,0) rotate(180deg);
+        }
+        }
+
+        @keyframes float-hi {
+        0% {
+        transform: translate3d(0,0px,0);
+        }
+        100% {
+        transform: translate3d(0,-60px,0);
+        }
+        }
+
+        svg > g > rect {
+        animation: float-mid ease-in-out 4s infinite alternate;
+        }
+
+        svg > g > rect.r1 {
+        transform-origin: 700px 800px;
+        animation: float-rotate-mid ease-in-out 3s infinite alternate;
+        }
+
+        svg > g > line {
+        animation: float-mid ease-in-out 4s infinite alternate;
+        }
+
+        svg > g > line.l1 {
+        animation: float-mid ease-in-out 4.25s infinite alternate;
+        }
+
+        svg > g > line.l2 {
+        animation: float-mid ease-in-out 4.5s infinite alternate;
+        }
+
+        svg > g > line.l3 {
+        animation: float-mid ease-in-out 4.75s infinite alternate;
+        }
+
+        svg > g > circle {
+        animation: float-hi ease-in-out 3s infinite alternate;
+        }
+
+        svg > g > circle.faster {
+        animation: float-hi ease-in-out 2s infinite alternate;
+        }
+
+        svg > g > circle.f1 {
+        animation: float-hi ease-in-out 2.5s infinite alternate;
+        }
+
+        svg > g > path {
+        animation: float-mid ease-in-out 5s infinite alternate;
+        }
+
+      </style>
+      <svg width="100%" viewBox="0 0 1920 1080" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g>
+          <circle class="faster" cx="1338" cy="209" r="84" stroke="#B2EBF2" stroke-width="6" />
+          <circle cx="-43" cy="1272" r="619" stroke="#B2EBF2" stroke-width="6" />
+          <circle cx="-43" cy="1272" r="593" stroke="#B2EBF2" stroke-width="6" />
+          <circle cx="-43" cy="1272" r="568" stroke="#B2EBF2" stroke-width="6" />
+          <circle cx="-43" cy="1272" r="540" stroke="#B2EBF2" stroke-width="6" />
+          <circle cx="-43" cy="1272" r="514" stroke="#B2EBF2" stroke-width="6" />
+          <circle cx="-43" cy="1272" r="487" stroke="#B2EBF2" stroke-width="6" />
+          <circle cx="-43" cy="1272" r="461" stroke="#B2EBF2" stroke-width="6" />
+          <circle cx="-43" cy="1272" r="435" stroke="#B2EBF2" stroke-width="6" />
+          <circle cx="-43" cy="1272" r="409" stroke="#B2EBF2" stroke-width="6" />
+          <circle cx="-43" cy="1272" r="382" stroke="#B2EBF2" stroke-width="6" />
+          <circle cx="-43" cy="1272" r="355" stroke="#B2EBF2" stroke-width="6" />
+          <circle cx="-43" cy="1272" r="329" stroke="#B2EBF2" stroke-width="6" />
+          <circle cx="-43" cy="1272" r="303" stroke="#B2EBF2" stroke-width="6" />
+          <circle class="f1" cx="474.5" cy="350.5" r="12" stroke="#B2EBF2" stroke-width="40" />
+          <circle cx="907.5" cy="145.5" r="3" stroke="#B2EBF2" stroke-width="15" />
+          <circle cx="907.5" cy="230.5" r="3" stroke="#B2EBF2" stroke-width="15" />
+          <circle cx="907.5" cy="315.5" r="3" stroke="#B2EBF2" stroke-width="15" />
+          <circle cx="1025.5" cy="145.5" r="3" stroke="#B2EBF2" stroke-width="15" />
+          <circle cx="1025.5" cy="230.5" r="3" stroke="#B2EBF2" stroke-width="15" />
+          <circle cx="1025.5" cy="315.5" r="3" stroke="#B2EBF2" stroke-width="15" />
+          <circle cx="1143.5" cy="145.5" r="3" stroke="#B2EBF2" stroke-width="15" />
+          <circle cx="1143.5" cy="230.5" r="3" stroke="#B2EBF2" stroke-width="15" />
+          <circle cx="1143.5" cy="315.5" r="3" stroke="#B2EBF2" stroke-width="15" />
+          <circle cx="1261.5" cy="145.5" r="3" stroke="#B2EBF2" stroke-width="15" />
+          <circle cx="1261.5" cy="230.5" r="3" stroke="#B2EBF2" stroke-width="15" />
+          <circle cx="1261.5" cy="315.5" r="3" stroke="#B2EBF2" stroke-width="15" />
+          <circle cx="1379.5" cy="145.5" r="3" stroke="#B2EBF2" stroke-width="15" />
+          <circle cx="1379.5" cy="230.5" r="3" stroke="#B2EBF2" stroke-width="15" />
+          <circle cx="1379.5" cy="315.5" r="3" stroke="#B2EBF2" stroke-width="15" />
+          <circle cx="1497.5" cy="145.5" r="3" stroke="#B2EBF2" stroke-width="15" />
+          <circle cx="1497.5" cy="230.5" r="3" stroke="#B2EBF2" stroke-width="15" />
+          <circle cx="1497.5" cy="315.5" r="3" stroke="#B2EBF2" stroke-width="15" />
+          <circle cx="1615.5" cy="145.5" r="3" stroke="#B2EBF2" stroke-width="15" />
+          <circle cx="1615.5" cy="230.5" r="3" stroke="#B2EBF2" stroke-width="15" />
+          <circle cx="1615.5" cy="315.5" r="3" stroke="#B2EBF2" stroke-width="15" />
+          <rect class="r1" x="650" y="750" width="100" height="100" stroke="#B2EBF2"
+            stroke-width="6" />
+          <line class="l1" x1="1275" y1="780" x2="1393" y2="780" stroke="#B2EBF2" stroke-width="6" />
+          <line class="l2" x1="1095" y1="839" x2="1685" y2="839" stroke="#B2EBF2" stroke-width="6" />
+          <line class="l3" x1="1275" y1="898" x2="1518" y2="898" stroke="#B2EBF2" stroke-width="6" />
+          <line x1="101.834" y1="297.925" x2="192.834" y2="202.925" stroke="#B2EBF2"
+            stroke-width="6" />
+          <line x1="299.834" y1="298.925" x2="390.834" y2="203.925" stroke="#B2EBF2"
+            stroke-width="6" />
+          <line x1="301.834" y1="494.925" x2="392.834" y2="399.925" stroke="#B2EBF2"
+            stroke-width="6" />
+          <line x1="104.834" y1="491.925" x2="195.834" y2="396.925" stroke="#B2EBF2"
+            stroke-width="6" />
+          <rect x="103" y="297" width="200" height="197" stroke="#B2EBF2" fill="none"
+            stroke-width="6" />
+          <rect x="192" y="204" width="200" height="197" stroke="#B2EBF2" fill="none"
+            stroke-width="6" />
+          <text
+            x="50%"
+            y="650"
+            text-anchor="middle"
+            font-family="system-ui, -apple-system, sans-serif"
+            font-weight="bold"
+            font-size="200"
+            fill="#B2EBF2"
+          >
+            Valtio-Define
+          </text>
+        </g>
+      </svg>
+    </div>
+  </foreignObject>
+</svg>
