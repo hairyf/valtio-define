@@ -43,11 +43,11 @@ export function defineStore<
   S extends object = {},
   A extends Actions<S> = {},
   G extends Getters<S> = {},
->(define: StoreDefine<S, A, G>): Store<S, A, G> {
-  const state = typeof define.state === 'function' ? define.state() : define.state
+>(options: StoreDefine<S, A, G>): Store<S, A, G> {
+  const state = typeof options.state === 'function' ? options.state() : options.state
 
-  const getters: any = define.getters || {}
-  const actions: any = define.actions || {}
+  const getters: any = options.getters || {}
+  const actions: any = options.actions || {}
   const $state = proxy<any>(state)
 
   const $actions: any = {}
@@ -64,8 +64,8 @@ export function defineStore<
     defineProperty($getters, key, () => $state[key])
   }
 
-  function $subscribe(listener: (state: any, opts: any) => void): () => void {
-    return subscribe($state, opts => listener($state, opts))
+  function $subscribe(listener: (state: any, ops: any) => void): () => void {
+    return subscribe($state, ops => listener($state, ops))
   }
 
   function $subscribeKey(key: keyof S, listener: (state: any) => void): () => void {
@@ -81,7 +81,6 @@ export function defineStore<
   }
 
   function use(plugin: Plugin): void {
-    plugins.push(plugin)
     apply(plugin)
   }
 
@@ -119,7 +118,7 @@ export function defineStore<
     if ($plugins.has(plugin))
       return
     $plugins.add(plugin)
-    plugin({ store, options: define })
+    plugin({ store, options })
   }
 
   for (const plugin of plugins)
