@@ -49,7 +49,7 @@
     "prepare": "simple-git-hooks"
   },
   "peerDependencies": {
-    "react": "^18.2.0"
+    "react": "catalog:"
   },
   "dependencies": {
     "@hairy/utils": "catalog:",

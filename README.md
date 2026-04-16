@@ -12,7 +12,7 @@
 ## 📦 Installation
 
 ```bash
-pnpm add valtio-define
+pnpm add valtio valtio-define
 ```
 
 <details>
