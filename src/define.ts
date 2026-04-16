@@ -7,7 +7,7 @@ import type {
   Store,
   StoreDefine,
 } from './types'
-import { batch, computed } from 'valtio-reactive'
+import { batch } from 'valtio-reactive'
 import { $ } from 'valtio-signal'
 import { subscribeKey } from 'valtio/utils'
 import { proxy, ref, subscribe } from 'valtio/vanilla'
@@ -52,16 +52,16 @@ export function defineStore<
   const actions: any = options.actions || {}
   const $state = proxy<any>(state)
 
-  let unsub: undefined | (() => void)
-
   const $actions: any = {}
+  const $getters: any = proxy({})
   const $plugins = new WeakSet<Plugin>()
 
-  const gettersBindStateThis: any = bindStateThis(getters, $state)
-  const $getters: any = computed(gettersBindStateThis)
+  let unsub: undefined | (() => void)
 
-  for (const key of Object.keys($getters))
-    defineProperty($state, key, () => $getters[key], { enumerable: false })
+  for (const key of Object.keys(getters)) {
+    defineProperty($state, key, getters[key].bind($state), { enumerable: false })
+    defineProperty($getters, key, () => $state[key])
+  }
 
   for (const key of Object.keys(actions)) {
     $actions[key] = ref(actions[key].bind($state))
@@ -150,11 +150,4 @@ function defineProperty(
   descriptor?: PropertyDescriptor,
 ) {
   Object.defineProperty(target, prop, { get: getter, enumerable: true, ...descriptor })
-}
-
-function bindStateThis(target: any, state: any) {
-  const targetWithStateThis: any = {}
-  for (const key in target)
-    targetWithStateThis[key] = target[key].bind(state)
-  return targetWithStateThis
 }

@@ -42,41 +42,24 @@ const store = defineStore({
       this.count++
     },
   },
-})
-
-function Counter() {
-  const { count } = useStore(store)
-
-  return (
-    <div>
-      <div>
-        Count:
-        {count}
-      </div>
-      <button onClick={store.increment}>Increment</button>
-    </div>
-  )
-}
-```
-
-### Derived State (Getters)
-
-Getters are **computed properties**. They automatically re-evaluate when their dependencies change, providing a clean way to derive data.
-
-```tsx
-const store = defineStore({
-  state: () => ({ count: 0 }),
   getters: {
     doubled() {
       return this.count * 2
     },
   },
-  actions: {
-    increment() {
-      this.count++
-    },
-  },
 })
+
+function Counter() {
+  const { count, doubled } = useStore(store)
+
+  return (
+    <div>
+      <button onClick={store.increment}>Increment</button>
+      <div>Count: {count}</div>
+      <div>Doubled: {doubled}</div>
+    </div>
+  )
+}
 ```
 
 -----

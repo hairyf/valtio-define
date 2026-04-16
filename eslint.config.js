@@ -10,6 +10,7 @@ export default antfu(
     },
     ignores: [
       '**/skills/**',
+      'README.md',
     ],
   },
 )
