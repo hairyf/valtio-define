@@ -8,7 +8,6 @@ import type {
   StoreDefine,
 } from './types'
 import { batch } from 'valtio-reactive'
-import { $ } from 'valtio-signal'
 import { subscribeKey } from 'valtio/utils'
 import { proxy, ref, subscribe } from 'valtio/vanilla'
 import { plugins } from './plugin'
@@ -82,10 +81,6 @@ export function defineStore<
       : Object.assign($state, patch)
   }
 
-  function $signal(fn: (state: any) => any): any {
-    return fn($($state))
-  }
-
   function $dispose(): void {
     unsub?.()
   }
@@ -102,7 +97,6 @@ export function defineStore<
     $actions,
     $getters,
     $dispose,
-    $signal,
     use,
   }
 
