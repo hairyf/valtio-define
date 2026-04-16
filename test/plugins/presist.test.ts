@@ -355,8 +355,8 @@ describe('persist plugin', () => {
     // This verifies that line 28 return was executed
   })
 
-  it('should exclude getters from initialization', () => {
-    mockStorage.getItem = vi.fn(() => JSON.stringify({ count: 10, doubled: 100 }))
+  it('should exclude getters from initialization', async () => {
+    mockStorage.getItem = vi.fn(() => JSON.stringify({ count: 10 }))
 
     const store = defineStore({
       state: { count: 0 },
@@ -373,6 +373,13 @@ describe('persist plugin', () => {
 
     expect(store.$state.count).toBe(10)
     expect(store.doubled).toBe(20)
+
+    store.$state.count = 5
+    expect(store.doubled).toBe(10)
+
+    await new Promise(resolve => setTimeout(resolve, 50))
+
+    expect(mockStorage.setItem).toHaveBeenCalledWith('test-store-getters', JSON.stringify({ count: 5 }))
   })
 
   describe('hydrate', () => {
