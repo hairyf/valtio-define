@@ -34,10 +34,8 @@ export function persist({ hydrate = true }: PersistentMountOptions = {}): Plugin
 
     function initialize(value: any) {
       const data = destr<Record<string, any>>(value)
-      if (data && typeof data === 'object') {
-        Object.keys(getters || {}).forEach(k => Reflect.deleteProperty(data, k))
+      if (data && typeof data === 'object')
         Object.assign($state, data)
-      }
       meta.hydrated = true
     }
 
@@ -58,7 +56,6 @@ export function persist({ hydrate = true }: PersistentMountOptions = {}): Plugin
         if (!meta.hydrated)
           return
         const paths = options.paths || Object.keys($state)
-        // 使用 reduce 替代 for 循环，更加函数式和紧凑
         const statePaths = paths.reduce((acc, p) => set(acc, p, get($state, p)), {})
         storage!.setItem(key, JSON.stringify(statePaths))
       })

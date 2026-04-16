@@ -10,7 +10,7 @@ export type ActionsOmitThisParameter<A extends Actions<any>> = {
   [K in keyof A]: (...args: Parameters<A[K]>) => ReturnType<A[K]>
 }
 
-export type GettersReturnType<G extends Getters<any>> = {
+export type GettersReturnType<G extends Getters> = {
   [K in keyof G]: ReturnType<G[K]>
 }
 
@@ -21,7 +21,7 @@ export interface StoreDefineOptions<S> {
 export interface StoreDefine<
   S extends object,
   A extends object,
-  G extends Getters<any>,
+  G extends Getters,
 > extends StoreDefineOptions<S> {
   state: (() => S) | S
   actions?: A & ThisType<A & S & GettersReturnType<G>>
