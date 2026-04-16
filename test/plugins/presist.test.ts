@@ -372,7 +372,7 @@ describe('persist plugin', () => {
     })
 
     expect(store.$state.count).toBe(10)
-    expect(store.$state.doubled).toBe(20)
+    expect(store.doubled).toBe(20)
   })
 
   describe('hydrate', () => {

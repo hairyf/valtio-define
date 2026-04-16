@@ -192,7 +192,7 @@ describe('defineStore', () => {
       })
 
       expect(store.$getters.doubled).toBe(10)
-      expect(store.$state.doubled).toBe(10)
+      expect(store.$getters.doubled).toBe(10)
     })
 
     it('should update getters when state changes', () => {
@@ -226,8 +226,8 @@ describe('defineStore', () => {
 
       expect(store.$getters.doubled).toBe(10)
       expect(store.$getters.tripled).toBe(15)
-      expect(store.$state.doubled).toBe(10)
-      expect(store.$state.tripled).toBe(15)
+      expect(store.$getters.doubled).toBe(10)
+      expect(store.tripled).toBe(15)
     })
 
     it('should allow getters to access other getters', () => {
@@ -387,15 +387,15 @@ describe('defineStore', () => {
       })
 
       expect(store.$state.count).toBe(0)
-      expect(store.$state.doubled).toBe(0)
+      expect(store.$getters.doubled).toBe(0)
 
       store.increment()
       expect(store.$state.count).toBe(1)
-      expect(store.$state.doubled).toBe(2)
+      expect(store.$getters.doubled).toBe(2)
 
       store.incrementBy(5)
       expect(store.$state.count).toBe(6)
-      expect(store.$state.doubled).toBe(12)
+      expect(store.$getters.doubled).toBe(12)
     })
 
     it('should handle complex async actions with getters', async () => {
@@ -417,45 +417,16 @@ describe('defineStore', () => {
         },
       })
 
-      expect(store.$state.count).toBe(0)
-      expect(store.$state.sum).toBe(0)
+      expect(store.count).toBe(0)
+      expect(store.sum).toBe(0)
 
       await store.addItem(5)
-      expect(store.$state.count).toBe(1)
-      expect(store.$state.sum).toBe(5)
+      expect(store.count).toBe(1)
+      expect(store.sum).toBe(5)
 
       await store.addItem(10)
-      expect(store.$state.count).toBe(2)
-      expect(store.$state.sum).toBe(15)
-    })
-  })
-
-  describe('$signal', () => {
-    it('should create a signal element', () => {
-      const store = defineStore({
-        state: { count: 5 },
-      })
-
-      const signal = store.$signal(state => state.count * 2)
-
-      expect(signal).toBeDefined()
-      expect(signal.type).toBeDefined()
-      expect(typeof signal.type).toBe('function')
-    })
-
-    it('should compute signal value from state', () => {
-      const store = defineStore({
-        state: { count: 10 },
-        getters: {
-          doubled() {
-            return this.count * 2
-          },
-        },
-      })
-
-      const signal = store.$signal(state => state.count + state.doubled)
-
-      expect(signal).toBeDefined()
+      expect(store.count).toBe(2)
+      expect(store.sum).toBe(15)
     })
   })
 

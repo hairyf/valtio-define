@@ -27,6 +27,10 @@
     "./plugins": "./src/plugins/index.ts",
     "./plugins/persist": "./src/plugins/persist/index.ts",
     "./plugins/persist/types": "./src/plugins/persist/types.ts",
+    "./plugins/signal": "./src/plugins/signal/index.ts",
+    "./plugins/signal/jsx-dev-runtime": "./src/plugins/signal/jsx-dev-runtime.ts",
+    "./plugins/signal/jsx-runtime": "./src/plugins/signal/jsx-runtime.ts",
+    "./plugins/signal/types": "./src/plugins/signal/types.ts",
     "./package.json": "./package.json"
   },
   "files": [
@@ -94,6 +98,10 @@
       "./plugins": "./dist/plugins/index.mjs",
       "./plugins/persist": "./dist/plugins/persist/index.mjs",
       "./plugins/persist/types": "./dist/plugins/persist/types.mjs",
+      "./plugins/signal": "./dist/plugins/signal/index.mjs",
+      "./plugins/signal/jsx-dev-runtime": "./dist/plugins/signal/jsx-dev-runtime.mjs",
+      "./plugins/signal/jsx-runtime": "./dist/plugins/signal/jsx-runtime.mjs",
+      "./plugins/signal/types": "./dist/plugins/signal/types.mjs",
       "./package.json": "./package.json"
     }
   }
