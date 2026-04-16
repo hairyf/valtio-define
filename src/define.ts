@@ -2,11 +2,12 @@
 import type {
   Actions,
   Getters,
+  Op,
   Plugin,
   Store,
   StoreDefine,
 } from './types'
-import { computed } from 'valtio-reactive'
+import { batch, computed } from 'valtio-reactive'
 import { $ } from 'valtio-signal'
 import { subscribeKey } from 'valtio/utils'
 import { proxy, ref, subscribe } from 'valtio/vanilla'
@@ -62,12 +63,12 @@ export function defineStore<
   for (const key of Object.keys($getters))
     defineProperty($state, key, () => $getters[key], { enumerable: false })
 
-  for (const key in actions) {
+  for (const key of Object.keys(actions)) {
     $actions[key] = ref(actions[key].bind($state))
     defineProperty($state, key, () => $actions[key], { enumerable: false })
   }
 
-  function $subscribe(listener: (state: any, ops: any) => void): () => void {
+  function $subscribe(listener: (state: S, ops: Op[]) => void): () => void {
     return subscribe($state, ops => listener($state, ops))
   }
 
@@ -76,7 +77,9 @@ export function defineStore<
   }
 
   function $patch(patch: Partial<S> | ((state: S) => void)): void {
-    typeof patch === 'function' ? patch($state) : Object.assign($state, patch)
+    typeof patch === 'function'
+      ? batch(() => patch($state))
+      : Object.assign($state, patch)
   }
 
   function $signal(fn: (state: any) => any): any {
