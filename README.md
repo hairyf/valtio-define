@@ -202,24 +202,24 @@ Every store instance created with `defineStore` includes built-in utility method
   * **`$patch(obj | fn)`**: Bulk update the state.
   * **`$subscribe(callback)`**: Watch the entire store for changes.
   * **`$subscribeKey(key, callback)`**: Watch a specific property.
-  * **`$signal(selector)`**: Use a selector function to create a signal.
+  * **`$signal(selector)`**: Render reactive values inline in JSX (works best with the Signal plugin + `@jsxImportSource`).
 
 -----
 
 ### 📡 Signal
 
-> if you want to use the signal plugin, you need to import it and use it in your store.
+Register the Signal plugin globally:
 ```tsx
-import { valtio } from 'valtio-define'
+import valtio from 'valtio-define'
 import { signal } from 'valtio-define/plugins/signal'
 
 valtio.use(signal())
 ```
 
-And add jsxImportSource at the beginning of your `.tsx` file
+Add `jsxImportSource` at the beginning of your `.tsx` file:
 
 ```tsx
-/** @jsxImportSource valtio-signal */
+/** @jsxImportSource valtio-define/plugins/signal */
 
 function App() {
   return <div>{store.$signal(state => state.count)}</div>
@@ -233,6 +233,8 @@ function App() {
 Plugins can be applied to all stores or restricted to a single instance.
 
 ```tsx
+import valtio, { defineStore } from 'valtio-define'
+
 // Global
 valtio.use(myPlugin())
 
@@ -247,6 +249,7 @@ Extend functionality by accessing the `store` instance and `options` through the
 
 ```tsx
 import type { Plugin } from 'valtio-define'
+import valtio from 'valtio-define'
 
 function loggerPlugin(): Plugin {
   return ({ store, options }) => {
@@ -255,6 +258,8 @@ function loggerPlugin(): Plugin {
     })
   }
 }
+
+valtio.use(loggerPlugin())
 
 declare module 'valtio-define' {
   export interface StoreDefineOptions<S extends object> {

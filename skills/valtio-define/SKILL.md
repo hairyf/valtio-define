@@ -3,11 +3,11 @@ name: valtio-define
 description: Comprehensive skills for working with valtio-define
 metadata:
   author: Hairyf
-  version: "2026.04.13"
+  version: "2026.04.16"
   source: Internal Documentation
 ---
 
-> Based on valtio-define v1.2.0. A Valtio-based state management library with a Pinia-like API for React applications.
+> Based on valtio-define v1.3.0 (updated since v1.2.1). A Valtio-based state management library with a Pinia-like API for React applications.
 
 ## Overview
 
@@ -27,7 +27,6 @@ valtio-define provides a factory function for creating reactive stores with stat
 |-------|-------------|-----------|
 | Subscriptions | Subscribe to state changes | [advanced-subscribe](references/advanced-subscribe.md) |
 | Patch | Update state with patch operations | [advanced-patch](references/advanced-patch.md) |
-| Signal | JSX component for inline reactive values | [advanced-signal](references/advanced-signal.md) |
 | Store to State | Convert store to useState-like hooks | [advanced-store-to-state](references/advanced-store-to-state.md) |
 
 ## Features
@@ -36,6 +35,7 @@ valtio-define provides a factory function for creating reactive stores with stat
 |-------|-------------|-----------|
 | Plugin System | Extend stores with plugins | [feature-plugin-system](references/feature-plugin-system.md) |
 | Persist Plugin | Persist state to storage | [feature-plugin-persist](references/feature-plugin-persist.md) |
+| Signal Plugin | JSX inline signals via `$signal` + custom JSX runtime | [feature-plugin-signal](references/feature-plugin-signal.md) |
 
 ## Quick Start
 

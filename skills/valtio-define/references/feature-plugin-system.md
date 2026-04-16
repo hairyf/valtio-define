@@ -34,6 +34,7 @@ import { persist } from 'valtio-define/plugins'
 
 const store = defineStore({
   state: () => ({ count: 0 }),
+  persist: true,
 })
 
 // Register plugin for this specific store only
@@ -64,11 +65,15 @@ type PluginContext<S extends object> = {
 ## Creating Custom Plugins
 
 ```tsx
+import valtio from 'valtio-define'
+import { defineStore } from 'valtio-define'
 import type { Plugin, PluginContext } from 'valtio-define'
 
-function myPlugin({ store, options }: PluginContext) {
-  store.$subscribe(() => {})
-  if (options.myOption) {}
+function myPlugin(): Plugin {
+  return ({ store, options }: PluginContext) => {
+    store.$subscribe(() => {})
+    if (options.myOption) {}
+  }
 }
 
 // Extend types for plugin options
@@ -94,4 +99,4 @@ store.use(myPlugin())
 * **Idempotent**: Plugins should be safe to apply multiple times (use WeakSet to track)
 * **Type Safety**: Extend `StoreDefine` interface for typed options
 * **Side Effects**: Plugins can set up subscriptions, modify state, etc.
-* **Cleanup**: Return cleanup functions if needed (store.$subscribe returns unsubscribe)
+* **Cleanup**: Manage unsubscriptions yourself (e.g., keep the unsubscribe returned by `store.$subscribe`, and run it from a custom `store.$dispose`)
