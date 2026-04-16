@@ -202,9 +202,29 @@ Every store instance created with `defineStore` includes built-in utility method
   * **`$patch(obj | fn)`**: Bulk update the state.
   * **`$subscribe(callback)`**: Watch the entire store for changes.
   * **`$subscribeKey(key, callback)`**: Watch a specific property.
-  * **`$signal(selector)`**: Use a selector function inside JSX for fine-grained reactivity.
+  * **`$signal(selector)`**: Use a selector function to create a signal.
 
 -----
+
+### 📡 Signal
+
+> if you want to use the signal plugin, you need to import it and use it in your store.
+```tsx
+import { valtio } from 'valtio-define'
+import { signal } from 'valtio-define/plugins/signal'
+
+valtio.use(signal())
+```
+
+And add jsxImportSource at the beginning of your `.tsx` file
+
+```tsx
+/** @jsxImportSource valtio-signal */
+
+function App() {
+  return <div>{store.$signal(state => state.count)}</div>
+}
+```
 
 ## 🔌 Plugins
 

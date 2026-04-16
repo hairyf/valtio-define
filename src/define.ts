@@ -6,10 +6,10 @@ import type {
   Store,
   StoreDefine,
 } from './types'
-import { createElement } from 'react'
-import { proxy, ref, subscribe, useSnapshot } from 'valtio'
 import { computed } from 'valtio-reactive'
+import { $ } from 'valtio-signal'
 import { subscribeKey } from 'valtio/utils'
+import { proxy, ref, subscribe } from 'valtio/vanilla'
 import { plugins } from './plugin'
 
 /**
@@ -59,7 +59,7 @@ export function defineStore<
   const gettersBindStateThis: any = bindStateThis(getters, $state)
   const $getters: any = computed(gettersBindStateThis)
 
-  for (const key in Object.keys($getters))
+  for (const key of Object.keys($getters))
     defineProperty($state, key, () => $getters[key], { enumerable: false })
 
   for (const key in actions) {
@@ -80,8 +80,7 @@ export function defineStore<
   }
 
   function $signal(fn: (state: any) => any): any {
-    const Signal = () => fn(useSnapshot($state))
-    return createElement(Signal)
+    return fn($($state))
   }
 
   function $dispose(): void {

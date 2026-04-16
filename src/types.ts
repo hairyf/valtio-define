@@ -32,8 +32,8 @@ export interface Signal<S, G extends Getters<S>> {
   <T>(fn: (state: S & GettersReturnType<G>) => T): ReactElement
 }
 
-type Path = (string | symbol)[]
-type Op = [op: 'set', path: Path, value: unknown, prevValue: unknown] | [op: 'delete', path: Path, prevValue: unknown]
+export type Path = (string | symbol)[]
+export type Op = [op: 'set', path: Path, value: unknown, prevValue: unknown] | [op: 'delete', path: Path, prevValue: unknown]
 
 export interface Subscribe<S, G extends Getters<S>> {
   (listener: (state: S & GettersReturnType<G>, opts: Op[]) => void): () => void
@@ -45,7 +45,7 @@ export interface Patch<S, G extends Getters<S>> {
   (patch: Partial<S> | ((state: S & GettersReturnType<G>) => void)): void
 }
 
-export interface StoreOptions {
+export interface StoreOptions<S, A, G> {
 
 }
 
@@ -57,9 +57,8 @@ export type Store<S, A extends Actions<S> = {}, G extends Getters<S> = {}> = {
   $actions: ActionsOmitThisParameter<A>
   $getters: GettersReturnType<G>
   $dispose: () => void
-  $signal: Signal<S, G>
   use: (plugin: Plugin) => void
-} & S & GettersReturnType<G> & ActionsOmitThisParameter<A> & StoreOptions
+} & S & GettersReturnType<G> & ActionsOmitThisParameter<A> & StoreOptions<S, A, G>
 
 export interface PluginContext<S extends object = Record<string, unknown>> {
   store: Store<S, Actions<S>, Getters<S>>

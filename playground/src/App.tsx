@@ -1,12 +1,17 @@
-/* eslint-disable @typescript-eslint/no-unused-expressions */
-import valtio, { defineStore, useStore } from 'valtio-define'
+/** @jsxImportSource valtio-define/plugins/signal */
+ 
+
+ 
+import valtio, { defineStore } from 'valtio-define'
 import { persist } from 'valtio-define/plugins/persist'
+import { signal } from 'valtio-define/plugins/signal'
 
 import reactLogo from './assets/react.svg'
 import './App.css'
 import viteLogo from '/vite.svg'
 
 valtio.use(persist())
+valtio.use(signal())
 
 const store = defineStore({
   state: () => ({
@@ -16,36 +21,11 @@ const store = defineStore({
     increment() {
       this.count++
     },
-    delay(ms: number) {
-      return new Promise(resolve => setTimeout(resolve, ms))
-    },
-    current() {
-      return this.doublePlusOne
-    },
-  },
-  getters: {
-    doubled() {
-      return this.count * 2
-    },
-    // the return type **must** be explicitly set
-    doublePlusOne() {
-      // autocompletion and typings for the whole store ✨
-      return this.doubled + 1
-    },
-  },
-  persist: {
-    key: 'counter',
   },
 })
 
-store.doublePlusOne
-// store.a // Fix:Not define getters this cont is Any
-store.$actions.current // Fix: (...args: any[]) => any
 
 function App() {
-  const counter = useStore(store)
-
-  store.$persist.mount()
 
   return (
     <>
@@ -59,13 +39,10 @@ function App() {
       </div>
       <h1>Vite + React</h1>
       <div className="card">
-        <button onClick={() => counter.increment()} style={{ marginRight: '10px' }}>
+        <button onClick={() => store.increment()} style={{ marginRight: '10px' }}>
           count is
           {' '}
-          {counter.count}
-        </button>
-        <button onClick={() => counter.delay(1000)}>
-          delay 1000ms
+          {store.$signal(state => state.count)}
         </button>
         <p>
           Edit
@@ -77,11 +54,6 @@ function App() {
       </div>
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
-      </p>
-      <p>
-        doubled is
-        {' '}
-        {counter.doubled}
       </p>
     </>
   )

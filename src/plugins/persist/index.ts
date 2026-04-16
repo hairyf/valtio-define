@@ -1,3 +1,4 @@
+/* eslint-disable unused-imports/no-unused-vars */
 import type { Plugin } from '../../types'
 import type { PersistentMeta, PersistentOptions, PersistentStore } from './types'
 import { get, set } from '@hairy/utils'
@@ -73,6 +74,7 @@ declare module 'valtio-define' {
   export interface StoreDefineOptions<S extends object> {
     persist?: PersistentOptions<S> | boolean
   }
-  export interface StoreOptions extends PersistentStore {
+  export interface StoreOptions<S, A, G> extends PersistentStore {
+
   }
 }

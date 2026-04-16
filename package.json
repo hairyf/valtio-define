@@ -52,7 +52,8 @@
     "destr": "catalog:",
     "structure-id": "catalog:",
     "valtio": "catalog:",
-    "valtio-reactive": "catalog:"
+    "valtio-reactive": "catalog:",
+    "valtio-signal": "catalog:"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:cli",

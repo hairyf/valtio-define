@@ -79,6 +79,9 @@ catalogs:
     valtio-reactive:
       specifier: ^0.2.0
       version: 0.2.0
+    valtio-signal:
+      specifier: ^0.6.0
+      version: 0.6.0
   inlined:
     '@antfu/utils':
       specifier: ^9.3.0
@@ -138,6 +141,9 @@ importers:
       valtio-reactive:
         specifier: 'catalog:'
         version: 0.2.0(valtio@2.3.0(@types/react@19.2.14)(react@19.2.4))
+      valtio-signal:
+        specifier: 'catalog:'
+        version: 0.6.0(react@19.2.4)(valtio@2.3.0(@types/react@19.2.14)(react@19.2.4))
     devDependencies:
       '@antfu/eslint-config':
         specifier: catalog:cli
@@ -1452,6 +1458,11 @@ packages:
   core-js-compat@3.47.0:
     resolution: {integrity: sha512-IGfuznZ/n7Kp9+nypamBhvwdwLsW6KC8IOaURw2doAK5e98AG3acVLdh0woOnEqCfUtS+Vu882JE4k/DAm3ItQ==}
 
+  create-react-signals@0.8.0:
+    resolution: {integrity: sha512-BMenSpH81lr/eRQp5ABPIfmBL1wqcIfM3iPnbPROtHn79KwtR9KVnQnFN/skTN/YLJPXJmXDM/R1CGhAWnEg1w==}
+    peerDependencies:
+      react: '>=18.0.0'
+
   cross-spawn@7.0.6:
     resolution: {integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==}
     engines: {node: '>= 8'}
@@ -2674,6 +2685,12 @@ packages:
     resolution: {integrity: sha512-Zl1vr0w2S33QP9wBRX60p1LczyHrX+AWLB3iRl1doCdUTKaCziSj9GZIyrEIMykfjd0b3t27+X44phKOplcyfg==}
     peerDependencies:
       valtio: '>=2.0.0'
+
+  valtio-signal@0.6.0:
+    resolution: {integrity: sha512-cQE85SG8VjXYIuxWmvw1iZt41icrMVcCQgsoleIAPgnP8vTk0xXNUPDzfS8y6m4ZFJQpHUvQjZznGwts7cKgJA==}
+    peerDependencies:
+      react: '>=18.0.0'
+      valtio: '>=2.0.0-rc.0'
 
   valtio@2.3.0:
     resolution: {integrity: sha512-1MfKNcmOIdBSatiJsYgw420n6jnD+jeoI0V+RkOQbCB0ElLh6GKUfPr0hc9uq/KBGeghivDEarRsKFFdSQQnKw==}
@@ -3946,6 +3963,10 @@ snapshots:
   core-js-compat@3.47.0:
     dependencies:
       browserslist: 4.28.1
+
+  create-react-signals@0.8.0(react@19.2.4):
+    dependencies:
+      react: 19.2.4
 
   cross-spawn@7.0.6:
     dependencies:
@@ -5391,6 +5412,12 @@ snapshots:
 
   valtio-reactive@0.2.0(valtio@2.3.0(@types/react@19.2.14)(react@19.2.4)):
     dependencies:
+      valtio: 2.3.0(@types/react@19.2.14)(react@19.2.4)
+
+  valtio-signal@0.6.0(react@19.2.4)(valtio@2.3.0(@types/react@19.2.14)(react@19.2.4)):
+    dependencies:
+      create-react-signals: 0.8.0(react@19.2.4)
+      react: 19.2.4
       valtio: 2.3.0(@types/react@19.2.14)(react@19.2.4)
 
   valtio@2.3.0(@types/react@19.2.14)(react@19.2.4):
