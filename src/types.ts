@@ -53,11 +53,12 @@ export type Store<S, A extends Actions<S> = {}, G extends Getters<S> = {}> = {
   $subscribe: Subscribe<S, G>
   $subscribeKey: SubscribeKey<S, G>
   $patch: Patch<S, G>
-  $state: S & GettersReturnType<G> & ActionsOmitThisParameter<A>
+  $state: S
   $actions: ActionsOmitThisParameter<A>
   $getters: GettersReturnType<G>
-  use: (plugin: Plugin) => void
+  $dispose: () => void
   $signal: Signal<S, G>
+  use: (plugin: Plugin) => void
 } & S & GettersReturnType<G> & ActionsOmitThisParameter<A> & StoreOptions
 
 export interface PluginContext<S extends object = Record<string, unknown>> {

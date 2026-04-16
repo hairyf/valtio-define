@@ -51,7 +51,8 @@
     "@hairy/utils": "catalog:",
     "destr": "catalog:",
     "structure-id": "catalog:",
-    "valtio": "catalog:"
+    "valtio": "catalog:",
+    "valtio-reactive": "catalog:"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:cli",

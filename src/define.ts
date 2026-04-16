@@ -8,6 +8,7 @@ import type {
 } from './types'
 import { createElement } from 'react'
 import { proxy, ref, subscribe, useSnapshot } from 'valtio'
+import { computed } from 'valtio-reactive'
 import { subscribeKey } from 'valtio/utils'
 import { plugins } from './plugin'
 
@@ -50,18 +51,20 @@ export function defineStore<
   const actions: any = options.actions || {}
   const $state = proxy<any>(state)
 
+  let unsub: undefined | (() => void)
+
   const $actions: any = {}
-  const $getters: any = {}
   const $plugins = new WeakSet<Plugin>()
+
+  const gettersBindStateThis: any = bindStateThis(getters, $state)
+  const $getters: any = computed(gettersBindStateThis)
+
+  for (const key in Object.keys($getters))
+    defineProperty($state, key, () => $getters[key], { enumerable: false })
 
   for (const key in actions) {
     $actions[key] = ref(actions[key].bind($state))
-    $state[key] = $actions[key]
-  }
-
-  for (const key in getters) {
-    defineProperty($state, key, () => getters[key].call($state))
-    defineProperty($getters, key, () => $state[key])
+    defineProperty($state, key, () => $actions[key], { enumerable: false })
   }
 
   function $subscribe(listener: (state: any, ops: any) => void): () => void {
@@ -77,7 +80,12 @@ export function defineStore<
   }
 
   function $signal(fn: (state: any) => any): any {
-    return createElement(() => fn(useSnapshot($state)))
+    const Signal = () => fn(useSnapshot($state))
+    return createElement(Signal)
+  }
+
+  function $dispose(): void {
+    unsub?.()
   }
 
   function use(plugin: Plugin): void {
@@ -91,6 +99,7 @@ export function defineStore<
     $state,
     $actions,
     $getters,
+    $dispose,
     $signal,
     use,
   }
@@ -124,13 +133,26 @@ export function defineStore<
   for (const plugin of plugins)
     apply(plugin)
 
-  subscribe(plugins, () => {
+  unsub = subscribe(plugins, () => {
     for (const plugin of plugins)
       apply(plugin)
   })
+
   return store
 }
 
-function defineProperty(target: any, prop: string | symbol, getter: () => any) {
-  Object.defineProperty(target, prop, { get: getter, enumerable: true })
+function defineProperty(
+  target: any,
+  prop: string | symbol,
+  getter: () => any,
+  descriptor?: PropertyDescriptor,
+) {
+  Object.defineProperty(target, prop, { get: getter, enumerable: true, ...descriptor })
+}
+
+function bindStateThis(target: any, state: any) {
+  const targetWithStateThis: any = {}
+  for (const key in target)
+    targetWithStateThis[key] = target[key].bind(state)
+  return targetWithStateThis
 }
