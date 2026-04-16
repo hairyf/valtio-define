@@ -36,7 +36,7 @@ type Path = (string | symbol)[]
 type Op = [op: 'set', path: Path, value: unknown, prevValue: unknown] | [op: 'delete', path: Path, prevValue: unknown]
 
 export interface Subscribe<S, G extends Getters<S>> {
-  (listener: (state: S & GettersReturnType<G>, opts: Op) => void): () => void
+  (listener: (state: S & GettersReturnType<G>, opts: Op[]) => void): () => void
 }
 export interface SubscribeKey<S, G extends Getters<S>> {
   <T extends keyof S | keyof G>(key: T, listener: (state: (S & GettersReturnType<G>)[T]) => void): () => void
