@@ -1,6 +1,6 @@
 import { renderToString } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
-import { defineStore, useStore } from '../src'
+import { defineStore, useGetters, useStore } from '../src'
 
 describe('useStore', () => {
   it('should be a function', () => {
@@ -107,5 +107,30 @@ describe('useStore', () => {
     expect(html).toContain('3')
     expect(html).toContain('6')
     expect(html).toContain('true')
+  })
+})
+
+describe('useGetters', () => {
+  it('should return a snapshot of store getters in server-side rendering', () => {
+    const store = defineStore({
+      state: { count: 5 },
+      getters: {
+        doubled() {
+          return this.count * 2
+        },
+      },
+    })
+
+    function TestComponent() {
+      const getters = useGetters(store)
+      return (
+        <div>
+          <span data-testid="doubled">{getters.doubled}</span>
+        </div>
+      )
+    }
+
+    const html = renderToString(<TestComponent />)
+    expect(html).toContain('10')
   })
 })

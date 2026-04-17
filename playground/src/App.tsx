@@ -29,7 +29,6 @@ const store = defineStore({
   },
 })
 
-
 function App() {
   const { count, doubled, tripled, increment } = useStore(store)
 

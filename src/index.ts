@@ -6,4 +6,5 @@ export * from './plugin'
 export * from './types'
 export * from './utils'
 
-export default { use }
+const defaultExport = { use }
+export default defaultExport
