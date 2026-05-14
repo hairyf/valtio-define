@@ -23,6 +23,7 @@ export function persist({ hydrate = true }: PersistentMountOptions = {}): Plugin
     if (!persist)
       return
 
+    const getterKeys = new Set(Object.keys(getters || {}))
     const options = persist === true ? {} : persist
     const key = options.key || generateStructureId($state)
     const storage = options.storage ?? (typeof localStorage !== 'undefined' ? localStorage : undefined)
@@ -34,8 +35,11 @@ export function persist({ hydrate = true }: PersistentMountOptions = {}): Plugin
 
     function initialize(value: any) {
       const data = destr<Record<string, any>>(value)
-      if (data && typeof data === 'object')
+      if (data && typeof data === 'object') {
+        for (const key of Object.keys(data))
+          getterKeys.has(key) && delete data[key]
         Object.assign($state, data)
+      }
       meta.hydrated = true
     }
 
@@ -55,7 +59,7 @@ export function persist({ hydrate = true }: PersistentMountOptions = {}): Plugin
       meta.unsubscribe = subscribe($state, () => {
         if (!meta.hydrated)
           return
-        const paths = options.paths || Object.keys($state)
+        const paths = (options.paths || Object.keys($state)).filter(p => !getterKeys.has(p))
         const statePaths = paths.reduce((acc, p) => set(acc, p, get($state, p)), {})
         storage!.setItem(key, JSON.stringify(statePaths))
       })
