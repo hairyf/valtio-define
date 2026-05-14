@@ -382,6 +382,163 @@ describe('persist plugin', () => {
     expect(mockStorage.setItem).toHaveBeenCalledWith('test-store-getters', JSON.stringify({ count: 5 }))
   })
 
+  describe('getter-only accessor property fix', () => {
+    it('should not throw when storage contains getter-only property data', () => {
+      mockStorage.getItem = vi.fn(() => JSON.stringify({ count: 10, doubled: 20 }))
+
+      const store = defineStore({
+        state: { count: 0 },
+        getters: {
+          doubled() {
+            return this.count * 2
+          },
+        },
+        persist: {
+          storage: mockStorage,
+          key: 'test-getter-persist',
+        },
+      })
+
+      expect(store.$state.count).toBe(10)
+      expect(store.doubled).toBe(20)
+    })
+
+    it('should not save getter values to storage on state change', async () => {
+      mockStorage.getItem = vi.fn(() => null)
+      mockStorage.setItem = vi.fn()
+
+      const store = defineStore({
+        state: { count: 0 },
+        getters: {
+          doubled() {
+            return this.count * 2
+          },
+          tripled() {
+            return this.count * 3
+          },
+        },
+        persist: {
+          storage: mockStorage,
+          key: 'test-getter-save',
+        },
+      })
+
+      await new Promise(resolve => setTimeout(resolve, 50))
+
+      store.$state.count = 7
+      await new Promise(resolve => setTimeout(resolve, 50))
+
+      const lastCall = vi.mocked(mockStorage.setItem).mock.calls[vi.mocked(mockStorage.setItem).mock.calls.length - 1]
+      const savedData = JSON.parse(lastCall[1] as string)
+      expect(savedData.count).toBe(7)
+      expect(savedData.doubled).toBeUndefined()
+      expect(savedData.tripled).toBeUndefined()
+    })
+
+    it('should ignore getter-only properties when storage contains stale getter data mixed with state', () => {
+      mockStorage.getItem = vi.fn(() => JSON.stringify({ count: 5, doubled: 99, name: 'hello' }))
+
+      const store = defineStore({
+        state: { count: 0, name: '' },
+        getters: {
+          doubled() {
+            return this.count * 2
+          },
+        },
+        persist: {
+          storage: mockStorage,
+          key: 'test-getter-mixed',
+        },
+      })
+
+      expect(store.$state.count).toBe(5)
+      expect(store.$state.name).toBe('hello')
+      expect(store.doubled).toBe(10)
+    })
+
+    it('should filter getter-only properties when paths explicitly includes them', async () => {
+      mockStorage.getItem = vi.fn(() => null)
+      mockStorage.setItem = vi.fn()
+
+      const store = defineStore({
+        state: { count: 0, name: 'test' },
+        getters: {
+          doubled() {
+            return this.count * 2
+          },
+        },
+        persist: {
+          storage: mockStorage,
+          key: 'test-getter-paths',
+          // @ts-expect-error paths should only include state properties
+          paths: ['count', 'doubled', 'name'],
+        },
+      })
+
+      await new Promise(resolve => setTimeout(resolve, 50))
+
+      store.$state.count = 3
+      await new Promise(resolve => setTimeout(resolve, 50))
+
+      const lastCall = vi.mocked(mockStorage.setItem).mock.calls[vi.mocked(mockStorage.setItem).mock.calls.length - 1]
+      const savedData = JSON.parse(lastCall[1] as string)
+      expect(savedData.count).toBe(3)
+      expect(savedData.name).toBe('test')
+      expect(savedData.doubled).toBeUndefined()
+    })
+
+    it('should not break getter values when multiple getters depend on each other', async () => {
+      mockStorage.getItem = vi.fn(() => JSON.stringify({ count: 4 }))
+
+      const store = defineStore({
+        state: { count: 0 },
+        getters: {
+          doubled() {
+            return this.count * 2
+          },
+          quadrupled() {
+            return this.doubled * 2
+          },
+        },
+        persist: {
+          storage: mockStorage,
+          key: 'test-getter-chain',
+        },
+      })
+
+      expect(store.$state.count).toBe(4)
+      expect(store.doubled).toBe(8)
+      expect(store.quadrupled).toBe(16)
+    })
+
+    it('should not throw with hydrate: false and manually mounting with getter data in storage', () => {
+      plugins.length = 0
+      use(persist({ hydrate: false }))
+
+      mockStorage.getItem = vi.fn(() => JSON.stringify({ count: 10, doubled: 20 }))
+
+      const store = defineStore({
+        state: { count: 0 },
+        getters: {
+          doubled() {
+            return this.count * 2
+          },
+        },
+        persist: {
+          storage: mockStorage,
+          key: 'test-getter-hydrate',
+        },
+      })
+
+      expect(store.$state.count).toBe(0)
+
+      store.$persist.mount()
+
+      expect(store.$state.count).toBe(10)
+      expect(store.doubled).toBe(20)
+    })
+  })
+
   describe('hydrate', () => {
     it('should mount from storage by default (hydrate: true)', () => {
       mockStorage.getItem = vi.fn(() => JSON.stringify({ count: 99 }))

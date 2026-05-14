@@ -5,7 +5,6 @@ export default defineConfig({
     'src/index.ts',
     'src/plugins/**/*.ts',
   ],
-  minify: true,
   clean: true,
   dts: true,
   exports: {
