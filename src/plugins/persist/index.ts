@@ -18,7 +18,7 @@ export function persist({ hydrate = true }: PersistentMountOptions = {}): Plugin
     const { persist, getters } = context.options
     const { $state } = context.store
 
-    context.store.$persist?.unmount?.()
+    context.store.$persist?.dehydrate?.()
 
     if (!persist)
       return
@@ -43,19 +43,21 @@ export function persist({ hydrate = true }: PersistentMountOptions = {}): Plugin
       meta.hydrated = true
     }
 
-    function mount() {
+    function rehydrate() {
       meta.mounted = true
       const value = storage!.getItem(key)
-      value instanceof Promise ? value.then(initialize) : initialize(value)
+      value instanceof Promise
+        ? value.then(initialize)
+        : initialize(value)
     }
 
-    function unmount() {
+    function dehydrate() {
       meta.unsubscribe?.()
       meta.unsubscribe = undefined
     }
 
     function watch() {
-      unmount()
+      dehydrate()
       meta.unsubscribe = subscribe($state, () => {
         if (!meta.hydrated)
           return
@@ -65,8 +67,8 @@ export function persist({ hydrate = true }: PersistentMountOptions = {}): Plugin
       })
     }
 
-    context.store.$persist = { mount, unmount, meta }
-    hydrate && !meta.mounted && mount()
+    context.store.$persist = { rehydrate, dehydrate, meta }
+    hydrate && !meta.mounted && rehydrate()
     watch()
   }
 }

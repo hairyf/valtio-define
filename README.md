@@ -124,7 +124,7 @@ Save and restore your store state using the `persist` plugin.
 
 ### Manual Hydration (SSR Friendly)
 
-To avoid hydration mismatches during Server-Side Rendering, disable automatic hydration and mount it in a `useEffect`.
+To avoid hydration mismatches during Server-Side Rendering, disable automatic hydration and rehydrate it in a `useEffect`.
 
 ```tsx
 // Register with hydrate disabled
@@ -132,7 +132,7 @@ store.use(persist({ hydrate: false }))
 
 // In your Client Entry / App Root
 useEffect(() => {
-  store.$persist.mount()
+  store.$persist.rehydrate()
 }, [])
 ```
 
@@ -224,6 +224,11 @@ valtio.use(myPlugin())
 // Local
 const store = defineStore({ /* ... */ })
 store.use(myPlugin())
+
+// Local options
+const store = defineStore({
+  use: [myPlugin()],
+})
 ```
 
 ### Creating a Custom Plugin

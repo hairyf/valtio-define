@@ -28,8 +28,8 @@ export interface PersistentMeta {
 
 export interface PersistentStore {
   $persist: {
-    mount: () => void
-    unmount: () => void
+    rehydrate: () => void
+    dehydrate: () => void
     meta: PersistentMeta
   }
 }

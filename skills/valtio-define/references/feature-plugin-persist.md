@@ -131,7 +131,7 @@ interface Storage {
 
 ## Manual Hydration (SSR Friendly)
 
-To avoid hydration mismatches during Server-Side Rendering, disable automatic hydration and mount it in a `useEffect`:
+To avoid hydration mismatches during Server-Side Rendering, disable automatic hydration and rehydrate it in a `useEffect`:
 
 ```tsx
 import { persist } from 'valtio-define/plugins/persist'
@@ -139,7 +139,7 @@ import { persist } from 'valtio-define/plugins/persist'
 store.use(persist({ hydrate: false }))
 
 useEffect(() => {
-  store.$persist.mount()
+  store.$persist.rehydrate()
 }, [])
 ```
 

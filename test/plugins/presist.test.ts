@@ -532,7 +532,7 @@ describe('persist plugin', () => {
 
       expect(store.$state.count).toBe(0)
 
-      store.$persist.mount()
+      store.$persist.rehydrate()
 
       expect(store.$state.count).toBe(10)
       expect(store.doubled).toBe(20)
@@ -589,7 +589,7 @@ describe('persist plugin', () => {
         },
       })
 
-      expect(store.$persist.mount).toBeDefined()
+      expect(store.$persist.rehydrate).toBeDefined()
 
       await new Promise(resolve => setTimeout(resolve, 50))
 
@@ -599,10 +599,10 @@ describe('persist plugin', () => {
       // mount() is never called, so isHydrated stays false and watch callback returns early
       expect(mockStorage.setItem).not.toHaveBeenCalled()
 
-      store.$persist.mount()
+      store.$persist.rehydrate()
       await new Promise(resolve => setTimeout(resolve, 10))
 
-      // After mount(), hydrated becomes true; trigger a state change to persist
+      // After rehydrate(), hydrated becomes true; trigger a state change to persist
       store.$state.count = 8
       await new Promise(resolve => setTimeout(resolve, 50))
 
