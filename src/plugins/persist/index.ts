@@ -46,7 +46,7 @@ export function persist({ hydrate = true }: PersistentMountOptions = {}): Plugin
     function rehydrate() {
       meta.mounted = true
       const value = storage!.getItem(key)
-      value instanceof Promise
+      return value instanceof Promise
         ? value.then(initialize)
         : initialize(value)
     }

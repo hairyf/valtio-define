@@ -28,7 +28,7 @@ export interface PersistentMeta {
 
 export interface PersistentStore {
   $persist: {
-    rehydrate: () => void
+    rehydrate: () => Awaitable<void>
     dehydrate: () => void
     meta: PersistentMeta
   }
