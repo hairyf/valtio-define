@@ -6,5 +6,8 @@ export * from './plugin'
 export * from './types'
 export * from './utils'
 
-const defaultExport = { use }
-export default defaultExport
+export { computed, effect } from 'valtio-reactive'
+
+const valtio = { use }
+
+export default valtio
