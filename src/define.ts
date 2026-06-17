@@ -55,8 +55,6 @@ export function defineStore<
   const $getters: any = proxy({})
   const $plugins = new WeakSet<Plugin>()
 
-  let unsub: undefined | (() => void)
-
   for (const key of Object.keys(getters)) {
     defineProperty($state, key, getters[key].bind($state), { enumerable: false })
     defineProperty($getters, key, () => $state[key])
@@ -81,10 +79,6 @@ export function defineStore<
       : Object.assign($state, patch)
   }
 
-  function $dispose(): void {
-    unsub?.()
-  }
-
   function use(plugin: Plugin): void {
     apply(plugin)
   }
@@ -96,7 +90,6 @@ export function defineStore<
     $state,
     $actions,
     $getters,
-    $dispose,
     use,
   }
 
@@ -128,11 +121,6 @@ export function defineStore<
 
   for (const plugin of plugins)
     apply(plugin)
-
-  unsub = subscribe(plugins, () => {
-    for (const plugin of plugins)
-      apply(plugin)
-  })
 
   return store
 }

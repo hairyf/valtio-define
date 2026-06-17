@@ -5,6 +5,7 @@ export * from './hooks'
 export * from './plugin'
 export * from './types'
 export * from './utils'
+export { useSnapshot } from 'valtio'
 
 export { computed, effect } from 'valtio-reactive'
 

@@ -56,7 +56,6 @@ export type Store<S, A extends Actions<S> = {}, G extends Getters<S> = {}> = {
   $state: S
   $actions: ActionsOmitThisParameter<A>
   $getters: GettersReturnType<G>
-  $dispose: () => void
   use: (plugin: Plugin) => void
 } & S & GettersReturnType<G> & ActionsOmitThisParameter<A> & StoreOptions<S, A, G>
 

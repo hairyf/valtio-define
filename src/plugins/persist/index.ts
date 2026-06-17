@@ -4,7 +4,7 @@ import type { PersistentMeta, PersistentOptions, PersistentStore } from './types
 import { get, set } from '@hairy/utils'
 import { destr } from 'destr'
 import { generateStructureId } from 'structure-id'
-import { subscribe } from 'valtio'
+import { proxy, subscribe } from 'valtio'
 
 export interface PersistentMountOptions {
   /**
@@ -31,7 +31,7 @@ export function persist({ hydrate = true }: PersistentMountOptions = {}): Plugin
     if (!storage?.getItem || !storage?.setItem)
       return
 
-    const meta: PersistentMeta = context.store.$persist?.meta ?? { mounted: false, hydrated: false }
+    const meta: PersistentMeta = context.store.$persist?.meta ?? proxy({ mounted: false, hydrated: false })
 
     function initialize(value: any) {
       const data = destr<Record<string, any>>(value)
